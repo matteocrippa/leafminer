@@ -1,0 +1,6 @@
+.pio
+.vscode
+src/leafminer.h
+.DS_Store
+__pycache__
+logs/
