@@ -1,0 +1,67 @@
+# BACKLOG (prioritized)
+
+- [ ] Fix blinking
+- [ ] Fix crash LCD GeekMagicClock
+- [ ] Fix crash ESP8266 WDT
+- [ ] Migrate to IDF
+- [ ] Miner `from` value needs to be handled
+- [ ] Fix ESP8266
+- [ ] ESP32-S3 led
+- [ ] Led brightness
+- [ ] [GeekMagicClock SmallTV](https://github.com/GeekMagicClock/smalltv/issues/4)
+- [ ] Increase to, at least, 20kH/s for ESP8266
+- [ ] Add support for .66 inch OLED
+- [ ] Add OTA support via web
+- [ ] Add mDNS support to discover Main node
+- [ ] Introduce proxy mining Main + Nodes to split the nonce in count(nodes)
+- [ ] NVS storage
+- [ ] Remote setup (address.name, pool?)
+- [ ] Add installer
+
+# DONE
+
+- [x] Create new logo
+- [x] Rename project
+- [x] Add unit tests for Job
+- [x] Add unit test to verify solution
+- [x] On network reset preserve auth
+- [x] Fix submit error
+- [x] Check defects
+- [x] Complete porting ofr sha256m and adjust miner
+- [x] On Job not found it triggers wrong flow
+- [x] Refactor net
+- [x] Fix on result error to wait for the notify
+- [x] On notify during mining fix crash
+- [x] Pass the miner name
+- [x] Add sha256 midstate
+- [x] Fix not persistin sessions even if we pass old one - Share rejected should not trigger again subscribe
+- [x] Add midstate and sha256ctx to job
+- [x] Add nextJob logic
+- [x] Missing Ntime in miner.submite
+- [x] Fix crash on getting a new job
+- [x] Measure sha256 performances
+- [x] Add early exit sha256
+- [x] too many rejected (job issue or midstate?)
+- [x] Fix [I] Net: >>> {"method": "mining.submit", "params": ["3PZvyQ2akiMFfZzXcftPixkHEB9HnULe3m.S2", "", "���?���?�", "���?�� B", "13651b83"], "id":4} wrong values for result
+- [x] Share rejected, debug also one value is always 00000
+- [x] Unit tests for job and result
+- [x] Fix we are sending the same job multiple times
+- [x] Fix wrong nonce sent
+- [x] Fix missing field in submit (null)
+- [x] Fix degraded performance at each iteration
+- [x] Fix multi-core
+- [x] Kill job out of miner when fails
+- [x] Move hashrate into miner class (not job)
+- [x] Fix Core 0 gettings stuck on infinite wait
+- [x] Fix crash
+- [x] Adjust log verbosity
+- [x] Handle LCD on/off
+- [x] Github action for unit tests
+- [x] Add support for LilyGo S3 + Screen
+- [x] Fix cJSON lib for ESP8266 (external import from ESP32 library)
+- [x] Refactor current
+- [x] Fix issue mining.submit.difficulty_too_low
+- [x] Improve performance after submit (drop from 72 to 65)
+- [x] Fix mining getting stuck
+- [x] Add Accepted / Rejected shares
+- [x] Prepare UI with single + total workers hash rate
