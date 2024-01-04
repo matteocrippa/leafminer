@@ -1,0 +1,29 @@
+<!-- Thanks for contributing to LeafMiner! 🌿⛏️ -->
+
+## Description
+<!-- Provide a detailed description of the changes made in this pull request. Include information about the problem being addressed, any design decisions made, or trade-offs considered. -->
+
+## Scope of the commit
+- [ ] New feature
+- [ ] Bug fix
+
+## Unit test
+- [ ] I added unit tests to cover my code (if not, specify why)
+- [ ] I performed tests for all the environments (if not, specify which one)
+
+## Dependencies and Compatibility
+<!-- Specify if this pull request introduces new dependencies or if there are compatibility concerns. -->
+
+## Documentation
+<!-- Specify if documentation has been updated to reflect the changes introduced in this pull request. -->
+
+## Breaking Changes
+<!-- If there are any breaking changes introduced by this pull request, please explicitly mention and describe them. -->
+
+## Additional Checks
+- [ ] I have considered and addressed any additional checks or steps required for this pull request.
+
+## Contributor Guidelines
+<!-- Please review our [Contributor Guidelines](link-to-guidelines) before submitting your pull request. -->
+
+<!-- Thanks again for your contribution to LeafMiner! 🌿⛏️ -->
