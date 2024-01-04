@@ -22,7 +22,10 @@ jobs:
     - name: Install PlatformIO Core
       run: pip install --upgrade platformio
 
+    - name: Add template header
+      run: mv src/leafminer.template.h src/leafminer.h
+
     - name: Run tests on the embedded target
       env:
         PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
-      run: pio remote test -v
+      run: pio remote test
