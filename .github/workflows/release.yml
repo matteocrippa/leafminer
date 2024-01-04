@@ -18,11 +18,39 @@ jobs:
       - name: Install PlatformIO
         run: pip install --upgrade platformio
 
+      - name: Adjust ini for release
+        run: sh .github/workflows/release.sh
+
       - name: Build PlatformIO Project
         run: pio run
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: builded artifacts
+          name: builded-artifacts
           path: .pio/build/*/*.bin
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install softprops/action-gh-release
+        run: pip install ghrelease
+
+      - name: Create GitHub Release
+        run: gh release create v${{ github.run_number }} -t "Release ${{ github.run_number }}" -n "Release ${{ github.run_number }}" -F changelog.md
+
+      - name: Upload artifacts to the release
+        run: |
+          gh release upload v${{ github.run_number }} .pio/build/*/*.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
