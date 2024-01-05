@@ -7,8 +7,8 @@ A FOSS ESP(\*) device Bitcoin miner.
 **Disclaimer:** Mining a block with LeafMiner is highly unlikely given the current complexity. The primary goal is to provide a learning platform for a deeper understanding of how Bitcoin and SHA256 operate.
 
 | ![LeafMiner on Lilygo-T-S3](.github/images/leafminer-lilygots3.png) | ![LeafMiner on GeekMagic Clock Small TV](.github/images/leafminer-geekmagicclock-smalltv.png) |
-| :-------------------------------------------------------- |  :- |
-| _Lilygo-T-S3_ |  _GeekMagic Clock - SmallTV_ |
+| :------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------- |
+| _Lilygo-T-S3_                                                       | _GeekMagic Clock - SmallTV_                                                                   |
 
 ### Features
 
