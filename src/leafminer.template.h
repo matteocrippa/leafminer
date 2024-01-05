@@ -1,7 +1,7 @@
 #ifndef LEAFMINER_H
 #define LEAFMINER_H
 
-#define _VERSION "0.0.1"
+#define _VERSION "0.0.2"
 
 // WiFi
 #define WIFI_SSID "YourWifiSSID"
@@ -23,8 +23,5 @@
 // Led
 #define BLINK_ENABLED true
 #define BLINK_BRIGHTNESS 128
-
-// LCD
-#define LCD_DEFAULT_ENABLED true
 
 #endif
