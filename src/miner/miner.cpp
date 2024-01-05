@@ -73,10 +73,9 @@ RAM_ATTR void miner(uint32_t core, uint32_t from)
 #else
         network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
 #if defined(HAS_LCD)
-            screen_loop();
+        screen_loop();
 #endif // HAS_LCD
 #endif
-
 
         current_setHighestDifficulty(diff_hash);
 

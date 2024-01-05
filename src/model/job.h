@@ -15,7 +15,8 @@
 #include "miner/nerdSHA256plus.h"
 #include "utils/log.h"
 
-class Job {
+class Job
+{
 public:
     Block block;
     Target target;

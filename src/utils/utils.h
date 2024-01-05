@@ -45,7 +45,7 @@ static inline std::string byteArrayToHexString(const byte *byteArray, size_t len
 {
     static const char hex_array[] = "0123456789abcdef";
     std::string result;
-    
+
     for (size_t i = 0; i < length; i++)
     {
         byte value = byteArray[i];

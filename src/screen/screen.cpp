@@ -67,11 +67,11 @@ void screen_toggle()
 {
   screen_enabled = !screen_enabled;
   tft.writecommand(screen_enabled ? TFT_DISPON : TFT_DISPOFF);
-  // add backlight handling for Lilygo T-S3
-  // https://github.com/Bodmer/TFT_eSPI/discussions/2328
-  #if defined(LILYGO_T_S3)
+// add backlight handling for Lilygo T-S3
+// https://github.com/Bodmer/TFT_eSPI/discussions/2328
+#if defined(LILYGO_T_S3)
   digitalWrite(38, screen_enabled ? HIGH : LOW);
-  #endif
+#endif
 }
 
 #if defined(ESP32)
