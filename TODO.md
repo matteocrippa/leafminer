@@ -1,6 +1,7 @@
 # BACKLOG (prioritized)
 
 - [ ] Add eeprom/preferences handling for conf
+- [ ] Test web and eeprom for ESP8266
 - [ ] Add ota from web server
 - [ ] Show miner ip (web setup option)
 - [ ] Show clock (web setup option)

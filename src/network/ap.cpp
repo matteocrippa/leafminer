@@ -56,6 +56,7 @@ std::string prepareHtmlWithValues(const Configuration &configuration)
     return html;
 }
 
+#if defined(ESP32)
 void handleUpdate()
 {
     static UpdateClass update;
@@ -92,6 +93,11 @@ void handleUpdate()
         }
     }
 }
+#else
+void handleUpdate() {
+    // TODO: Implement OTA for ESP8266
+}
+#endif
 
 void ap_webserver(const Configuration &configuration)
 {
