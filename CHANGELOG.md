@@ -1,4 +1,7 @@
 # v0.0.2
+- Add Webserver setup with captive portal.
+- Add LCD on start status handler.
+- Prepared support for OTA.
 
 # v0.0.1
 
