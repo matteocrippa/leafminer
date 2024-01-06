@@ -4,11 +4,20 @@
 #endif // HAS_LCD
 #include <Arduino.h>
 
-void button_setup()
+bool button_setup()
 {
   // TODO: add check for device
   // LILYGO-T-DISPLAY-S3
   pinMode(14, INPUT_PULLUP);
+
+#if defined(ESP32)
+// if we start with the button pressed
+  if (digitalRead(14) == LOW)
+  {
+    return true;
+  }
+  #endif // ESP32
+  return false;
 }
 
 #if defined(ESP32)
