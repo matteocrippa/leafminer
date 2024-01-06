@@ -20,7 +20,6 @@ uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
 extern Configuration configuration;
-// Configuration configuration = Configuration(WIFI_SSID, WIFI_PASSWORD, ADDRESS, POOL_PASSWORD, POOL_URL, POOL_PORT);
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
