@@ -4,3 +4,4 @@ src/leafminer.h
 .DS_Store
 __pycache__
 logs/
+html/*.h
