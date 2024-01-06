@@ -3,27 +3,19 @@
 
 #include <string>
 #include <stdio.h>
-#include "utils/platform.h"
 
 struct Configuration
 {
-    std::string wifi_ssid;
-    std::string wifi_password;
-    std::string address;
-    std::string password;
-    std::string pool_url;
-    int pool_port;
-
-    // Constructor using member initialization list
-    Configuration(const std::string &wifi_ssid, const std::string &wifi_password, const std::string &address, const std::string &password, const std::string &pool_url, const int &pool_port)
-        : wifi_ssid(wifi_ssid),
-          wifi_password(wifi_password),
-          address(address),
-          password(password),
-          pool_url(pool_url),
-          pool_port(pool_port)
-    {
-    }
+    std::string wifi_ssid = "";
+    std::string wifi_password = "";
+    std::string wallet_address = "";
+    std::string pool_password = "";
+    std::string pool_url = "";
+    int pool_port = 0;
+    std::string blink_enabled = "";
+    int blink_brightness = 256;
+    std::string lcd_on_start = "";
+    std::string miner_type = "";
 };
 
 #endif
