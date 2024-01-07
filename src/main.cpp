@@ -26,13 +26,15 @@ bool force_ap = false;
 void setup()
 {
   Serial.begin(115200);
-  delay(500);
+  delay(1000);
   l_debug(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
 #if defined(ESP32)
   current_semaphoreInit();
 #endif // ESP32
+  l_debug(TAG_MAIN, "PreSetup");
   storage_setup();
+  l_debug(TAG_MAIN, "PostSetup");
 
   force_ap = button_setup();
 
