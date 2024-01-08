@@ -6,7 +6,7 @@
 #include "utils/log.h"
 #include "model/configuration.h"
 #include "network/network.h"
-#include "network/ap.h"
+// #include "network/ap.h"
 #include "utils/blink.h"
 #include "miner/miner.h"
 #include "current.h"
@@ -42,7 +42,7 @@ void setup()
   if (configuration.wifi_ssid == "" || force_ap)
   {
     l_info(TAG_MAIN, "Starting AP");
-    ap_setup(configuration);
+    // ap_setup(configuration);
     return;
   }
 
@@ -84,7 +84,7 @@ void loop()
 {
   if (configuration.wifi_ssid == "" || force_ap)
   {
-    ap_loop();
+    // ap_loop();
     return;
   }
 

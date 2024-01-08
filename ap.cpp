@@ -3,9 +3,9 @@
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <DNSServer.h>
 #include <ESP8266mDNS.h>
-#include <Updater.h>
+#include <DNSServer.h>
+// #include <Updater.h>
 typedef ESP8266WebServer WebServer;
 #else
 #include <WiFi.h>
