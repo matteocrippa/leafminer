@@ -72,8 +72,8 @@ If the setup was successful, you should be able to see your miner in the stats.
 
 If you need to restart the setup flow:
 
-- Unplug the USB cable, press and hold the physical button, and plug in the USB.
-- Press and hold for 2 seconds the button while pressing the reset button.
+- ESP32 - Unplug the USB cable, press and hold the physical button, and plug in the USB.
+- ESP8266 - You need to erase the flash and reflash.
 
 You should now discover the _LeafMiner_ WiFi again and go through the setup process.
 
