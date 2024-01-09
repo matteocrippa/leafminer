@@ -59,36 +59,38 @@ std::string prepareHtmlWithValues(const Configuration &configuration)
 #if defined(ESP32)
 void handleUpdate()
 {
-    static UpdateClass update;
-
     HTTPUpload &upload = server.upload();
-    if (upload.status == UPLOAD_FILE_START)
-    {
-        Serial.printf("Update: %s\n", upload.filename.c_str());
-        if (!update.begin(UPDATE_SIZE_UNKNOWN))
-        {
-            update.printError(Serial);
+    l_debug(TAG_AP, "Status: %d", upload.status);
+    l_debug(TAG_AP, "File: %s", upload.filename.c_str());
+    l_debug(TAG_AP, "Type: %s", upload.type.c_str());
+    l_debug(TAG_AP, "Total size: %u", upload.totalSize);
+    l_debug(TAG_AP, "Current size: %u", upload.currentSize);
+    l_debug(TAG_AP, "-------------------");
+
+     if (upload.status == UPLOAD_FILE_END)
+    {   
+        if(!Update.begin(upload.totalSize)) {
+            l_error(TAG_AP, "Update Begin Failed: %s", Update.errorString());
+            server.send(500, "text/plain", "Update failed");
+            return;
         }
-    }
-    else if (upload.status == UPLOAD_FILE_WRITE)
-    {
-        if (update.write(upload.buf, upload.currentSize) != upload.currentSize)
-        {
-            update.printError(Serial);
+
+        if(Update.write(upload.buf, upload.totalSize) != upload.totalSize) {
+            l_error(TAG_AP, "Update Write Failed: %s", Update.errorString());
+            server.send(500, "text/plain", "Update failed");
+            return;
         }
-    }
-    else if (upload.status == UPLOAD_FILE_END)
-    {
-        if (update.end(true))
+
+        if (Update.end(true))
         {
-            Serial.printf("Update Success: %uB\n", upload.totalSize);
-            server.send(200, "text/html", "Update success. Rebooting...");
+            l_debug(TAG_AP, "Update success. Please manually reboot...");
+            server.send(200, "text/html", "Update success. Please manually reboot...");
             delay(1000);
             ESP.restart();
         }
         else
         {
-            update.printError(Serial);
+            l_error(TAG_AP, "Update End Failed: %s", Update.errorString());
             server.send(500, "text/plain", "Update failed");
         }
     }
