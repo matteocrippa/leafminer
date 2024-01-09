@@ -14,13 +14,12 @@ bool button_setup()
   }
   return false;
 }
-#endif // LILYGO_T_S3
-
+#else
 bool button_setup()
 {
   return false;
 }
-
+#endif // LILYGO_T_S3
 
 #if defined(ESP32)
 
