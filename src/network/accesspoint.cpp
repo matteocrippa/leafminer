@@ -15,8 +15,8 @@ typedef ESP8266WebServer WebServer;
 #include <Update.h>
 #endif // ESP8266
 #include "storage/storage.h"
-// #include "html/setup.h"
-// #include "html/ota.h"
+#include "html/setup.h"
+#include "html/ota.h"
 
 extern Configuration configuration;
 char TAG_AP[] = "AccessPoint";
@@ -39,7 +39,7 @@ void replacePattern(std::string &html, const std::string &pattern, const std::st
 
 std::string prepareHtmlWithValues(const Configuration &configuration)
 {
-    std::string html = ""; // html_setup;
+    std::string html = html_setup;
     replacePattern(html, "{{wifi_ssid}}", configuration.wifi_ssid);
     replacePattern(html, "{{wifi_password}}", configuration.wifi_password);
     replacePattern(html, "{{wallet_address}}", configuration.wallet_address);
@@ -102,19 +102,16 @@ void handleUpdate()
 
 void accesspoint_webserver()
 {
-    // TODO: remove
-    String html_ota = "";
-
     server.on("/", HTTP_GET, [](){ 
         std::string html = prepareHtmlWithValues(configuration);
         server.send(200, "text/html", html.c_str()); 
     });
 
-    // server.on("/ota", HTTP_GET, [html_ota](){ 
-    //     server.send(200, "text/html", html_ota.c_str()); 
-    // });
+    server.on("/ota", HTTP_GET, [](){ 
+        server.send(200, "text/html", html_ota); 
+    });
 
-    // server.on("/upload", HTTP_POST, handleUpdate);
+    server.on("/upload", HTTP_POST, handleUpdate);
 
     server.on("/save", HTTP_POST, [](){
         Configuration conf = Configuration();
