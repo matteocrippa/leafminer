@@ -6,7 +6,8 @@ if [ $# -eq 0 ]; then
 fi
 
 input_file=$1
-output_file="${input_file%.html}.h"
+output_file="${input_file%.html}"
+uppercase_input_file=$(echo "$output_file" | tr '[:lower:]' '[:upper:]')
 
 # Check if the input HTML file exists
 if [ ! -f "$input_file" ]; then
@@ -14,19 +15,30 @@ if [ ! -f "$input_file" ]; then
   exit 1
 fi
 
-# Minify HTML by removing unnecessary whitespace and comments
-html_content=$(cat "$input_file" | tr -d '\n\r\t' | sed 's/<!--.*-->//g' | sed 's/> *</></g' | sed 's/"/\\"/g')
+# Minify HTML and CSS by removing unnecessary whitespace and comments
+html_content=$(cat "$input_file" | tr -d '\n\r\t' | sed 's/<!--.*-->//g' | sed 's/> *</></g' | sed 's/ \+/ /g' | sed 's/{ /{/g' | sed 's/ }/}/g')
+
+# Escape double quotes for C++ string and wrap in R"=====( )
+escaped_html_content=$(echo "$html_content" | sed 's/"/\\"/g')
+wrapped_html_content="R\"=====(
+$escaped_html_content
+)=====\";"
 
 # Write the C++ variable to the output .h file
-cat <<EOF > "$output_file"
-#ifndef HTML_FILE_H
-#define HTML_FILE_H
+cat <<EOF > "${output_file}.h"
+/*
+ * ${output_file}.h
+ * Generated from ${input_file}
+ */
+
+#ifndef HTML_${uppercase_input_file}_H
+#define HTML_${uppercase_input_file}_H
 
 #include <string>
 
-const std::string html = "$html_content";
+const char PROGMEM html_${output_file}[] = $wrapped_html_content
 
-#endif // HTML_FILE_H
+#endif // HTML_${uppercase_input_file}_H
 EOF
 
-echo "Minified C++ variable saved to $output_file"
+echo "Minified C++ variable saved to ${output_file}.h"
