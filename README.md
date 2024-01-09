@@ -22,7 +22,7 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266EX         |   🟧   | ±9 kH/s           |
+| ESP8266EX         |   🟧   | ±16 kH/s           |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±62 kH/s          |
