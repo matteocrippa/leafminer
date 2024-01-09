@@ -20,9 +20,7 @@ html_content=$(cat "$input_file" | tr -d '\n\r\t' | sed 's/<!--.*-->//g' | sed '
 
 # Escape double quotes for C++ string and wrap in R"=====( )
 escaped_html_content=$(echo "$html_content" | sed 's/"/\\"/g')
-wrapped_html_content="R\"=====(
-$escaped_html_content
-)=====\";"
+wrapped_html_content="\"$escaped_html_content\";"
 
 # Write the C++ variable to the output .h file
 cat <<EOF > "${output_file}.h"
@@ -36,7 +34,7 @@ cat <<EOF > "${output_file}.h"
 
 #include <string>
 
-const char PROGMEM html_${output_file}[] = $wrapped_html_content
+const std::string html_${output_file} = $wrapped_html_content
 
 #endif // HTML_${uppercase_input_file}_H
 EOF
