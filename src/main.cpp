@@ -6,7 +6,7 @@
 #include "utils/log.h"
 #include "model/configuration.h"
 #include "network/network.h"
-// #include "network/ap.h"
+#include "network/accesspoint.h"
 #include "utils/blink.h"
 #include "miner/miner.h"
 #include "current.h"
@@ -32,17 +32,14 @@ void setup()
 #if defined(ESP32)
   current_semaphoreInit();
 #endif // ESP32
-  l_debug(TAG_MAIN, "PreSetup");
   storage_setup();
-  l_debug(TAG_MAIN, "PostSetup");
 
   force_ap = button_setup();
 
   storage_load(&configuration);
   if (configuration.wifi_ssid == "" || force_ap)
   {
-    l_info(TAG_MAIN, "Starting AP");
-    // ap_setup(configuration);
+    accesspoint_setup();
     return;
   }
 
@@ -84,7 +81,7 @@ void loop()
 {
   if (configuration.wifi_ssid == "" || force_ap)
   {
-    // ap_loop();
+    accesspoint_loop();
     return;
   }
 

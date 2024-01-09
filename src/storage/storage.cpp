@@ -8,9 +8,8 @@ const char TAG_STORAGE[13] = "Storage";
 
 void storage_setup()
 {
-    l_info(TAG_STORAGE, "Setup");
     bool success = preferences.begin("config", false);
-    l_info(TAG_STORAGE, "PostSetup - %s", success ? "OK" : "ERROR");
+    l_info(TAG_STORAGE, "Setup: %s", success ? "OK" : "ERROR");
 }
 
 void storage_save(const Configuration &conf)
