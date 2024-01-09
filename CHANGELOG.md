@@ -2,6 +2,13 @@
 - Add Webserver setup with captive portal.
 - Add LCD on start status handler.
 - Prepared support for OTA.
+- Add web setup portal
+- Add eeprom/preferences handling for conf
+- Test web and eeprom for ESP8266
+- Fix crash LCD GeekMagicClock
+- Fix crash ESP8266 WDT
+- Fix ESP8266
+- Add CI/CD builder
 
 # v0.0.1
 
