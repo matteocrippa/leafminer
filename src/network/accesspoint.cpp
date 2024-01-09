@@ -108,7 +108,7 @@ void accesspoint_webserver()
     });
 
     server.on("/ota", HTTP_GET, [](){ 
-        server.send(200, "text/html", html_ota); 
+        server.send(200, "text/html", html_ota.c_str()); 
     });
 
     server.on("/upload", HTTP_POST, handleUpdate);
