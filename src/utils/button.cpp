@@ -34,6 +34,10 @@ void button_task()
     delay(333);
   }
 }
+#else
+void button_task()
+{
+}
 #endif // LILYGO_T_S3
 
 void buttonTaskFunction(void *pvParameters)
