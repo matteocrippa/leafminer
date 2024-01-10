@@ -22,7 +22,7 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266EX         |   🟧   | ±16 kH/s           |
+| ESP8266        |   🟧   | ±16 kH/s           |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±62 kH/s          |
@@ -52,30 +52,57 @@ _Legend_
 
 ### Flash Binary
 
-- TBD
+- Download the binary file for your board
+
+| Board | Link |
+| :- | :- |
+| ESP8266 | [0.0.1]() |
+| GeekMagic SmartTV | [0.0.1]() |
+| ESP32 | [0.0.1]() |
+| ESP32-S2 | [0.0.1]() |
+| ESP32-S3 | [0.0.1]() |
+| LILYGO-T-S3 | [0.0.1]() |
+
+- Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
 
 ### Build from Scratch
 
 - Clone the project
+- Open in Platformio
 - Upload the project to your board
 
-### Setup
+### Quick Start Guide
 
-1. Power up your ESP32/ESP8266.
-2. Connect to the LeafMiner WiFi.
-3. Open your browser to the page [http://192.168.4.1](http://192.168.4.1) if the captive portal is not appearing.
-4. Provide the information in the form and hit save, then reboot.
+Follow these steps to set up your ESP32/ESP8266 with LEAFMINER:
 
-We have already pre-set _public-pool.io_ as the suggested solo pool, but you can change it if you prefer.
+1. **Power Up:**
+   Power up your ESP32/ESP8266 device.
 
-If the setup was successful, you should be able to see your miner in the stats.
+2. **Connect to LEAFMINER WiFi:**
+   Connect to the WiFi network named "LEAFMINER."
 
-If you need to restart the setup flow:
+3. **Access Configuration Page:**
+   Open your web browser and navigate to [http://192.168.4.1](http://192.168.4.1) if the captive portal doesn't appear automatically.
 
-- ESP32 - Unplug the USB cable, press and hold the physical button, and plug in the USB.
-- ESP8266 - You need to erase the flash and reflash.
+4. **Provide Information and Save:**
+   Fill out the form, click the save button, and then reboot your device.
 
-You should now discover the _LeafMiner_ WiFi again and go through the setup process.
+   We've set _public-pool.io_ as the default solo pool, but feel free to change it to your preference.
+
+**Verification:**
+If the setup is successful, you'll see your miner in the stats.
+
+### Resetting Setup
+
+If you need to reset the setup flow:
+
+- **For ESP32:**
+  Unplug the USB cable, press and hold the BOOT button, and then plug in the USB cable.
+
+- **For ESP8266:**
+  Unfortunately, you need to erase the flash and reflash, as there's only a physical button for this.
+
+After resetting, rediscover the _LEAFMINER_ WiFi and go through the setup process again.
 
 ## Donate
 
