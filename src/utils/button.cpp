@@ -4,22 +4,23 @@
 #endif // HAS_LCD
 #include <Arduino.h>
 
+#define BUTTON_PIN -1
 #if defined(LILYGO_T_S3)
-bool button_setup()
-{
-  pinMode(14, INPUT_PULLUP);
-  if (digitalRead(14) == LOW)
-  {
-    return true;
+#define BUTTON_PIN 14
+#endif
+#if defined(ESP32_S3) || defined(ESP32_WROOM)
+#define BUTTON_PIN 0
+#endif
+
+bool button_setup() {
+  if (BUTTON_PIN != -1) {
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    if (digitalRead(BUTTON_PIN) == LOW) {
+      return true;
+    }
   }
   return false;
 }
-#else
-bool button_setup()
-{
-  return false;
-}
-#endif // LILYGO_T_S3
 
 #if defined(ESP32)
 
