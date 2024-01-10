@@ -38,7 +38,7 @@ jobs:
       - name: Archive artifacts
         run: |
           mkdir -p artifacts
-          cp .pio/build/*/*.bin artifacts/
+          find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
         working-directory: ${{ github.workspace }}
 
       - name: Upload artifacts
