@@ -22,7 +22,7 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266        |   🟧   | ±16 kH/s           |
+| ESP8266           |   🟧   | ±16 kH/s          |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±62 kH/s          |
@@ -54,14 +54,14 @@ _Legend_
 
 - Download the binary file for your board
 
-| Board | Link |
-| :- | :- |
-| ESP8266 | [0.0.1]() |
+| Board             | Link      |
+| :---------------- | :-------- |
+| ESP8266           | [0.0.1]() |
 | GeekMagic SmartTV | [0.0.1]() |
-| ESP32 | [0.0.1]() |
-| ESP32-S2 | [0.0.1]() |
-| ESP32-S3 | [0.0.1]() |
-| LILYGO-T-S3 | [0.0.1]() |
+| ESP32             | [0.0.1]() |
+| ESP32-S2          | [0.0.1]() |
+| ESP32-S3          | [0.0.1]() |
+| LILYGO-T-S3       | [0.0.1]() |
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
 
