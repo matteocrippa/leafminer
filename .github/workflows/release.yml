@@ -30,7 +30,7 @@ jobs:
         run: echo "::set-output name=version::$(grep -oP '(?<=_VERSION ").*?(?=")' leafminer.h)"
 
       - name: Adjust ini for release
-        run: sh .github/workflows/release.sh
+        run: sh .github/scripts/release.sh
 
       - name: Build PlatformIO Project
         run: pio run
