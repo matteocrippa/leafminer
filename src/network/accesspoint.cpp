@@ -54,6 +54,15 @@ std::string prepareHtmlWithValues(const Configuration &configuration)
     return html;
 }
 
+void accesspoint_print_error() {
+    #if defined(ESP32)
+    std::string error = Update.errorString();
+    #else
+    std::string error = Update.getErrorString().c_str();
+    #endif
+    l_error(TAG_AP, "Update Failed: %s", error.c_str());
+}
+
 void accesspoint_webserver()
 {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -73,14 +82,14 @@ void accesspoint_webserver()
             l_debug(TAG_AP, "Update Start: %s", filename.c_str());
 			if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000))
 			{
-                l_error(TAG_AP, "Update Begin Failed: %s", Update.errorString());
+                accesspoint_print_error();
 			}
 		}
 		if (!Update.hasError())
 		{
 			if (Update.write(data, len) != len)
 			{
-                l_error(TAG_AP, "Update Write Failed: %s", Update.errorString());
+                accesspoint_print_error();
 			}
 		}
 		if (final)
@@ -93,7 +102,7 @@ void accesspoint_webserver()
 			}
 			else
 			{
-                l_error(TAG_AP, "Update End Failed: %s", Update.errorString());
+                accesspoint_print_error();
 			}
 		} 
 	});
