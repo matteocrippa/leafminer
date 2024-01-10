@@ -3,6 +3,9 @@ name: Release
 permissions:
   contents: write
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 on:
   push:
     branches:
@@ -59,6 +62,8 @@ jobs:
 
       - name: Create GitHub Release
         run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F changelog.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
@@ -72,4 +77,4 @@ jobs:
             gh release upload v${{ steps.extract_version.outputs.version }} $file;
           done
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
