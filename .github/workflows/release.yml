@@ -61,7 +61,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create GitHub Release
-        run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F changelog.md
+        run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F CHANGELOG.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
