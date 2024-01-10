@@ -23,7 +23,7 @@
 
       p {
         width: auto;
-        text-align: center; 
+        text-align: center;
       }
 
       label {
@@ -77,17 +77,54 @@
       <input type="number" name="pool_port" value="{{pool_port}}" />
       <br />
       <label>Blinking Enabled:</label>
-      Off <input type="radio" id="lcd_on_start_off" name="blink_enabled" value="off" {{blink_enabled_off}}/>
-      On <input type="radio" id="lcd_on_start_on" name="blink_enabled" value="on" {{blink_enabled_on}}/>
+      Off
+      <input
+        type="radio"
+        id="lcd_on_start_off"
+        name="blink_enabled"
+        value="off"
+        {{blink_enabled_off}}
+      />
+      On
+      <input
+        type="radio"
+        id="lcd_on_start_on"
+        name="blink_enabled"
+        value="on"
+        {{blink_enabled_on}}
+      />
       <br />
       <label>Blinking Brightness:</label>
-      <input type="number" name="blink_brightness" value="{{blink_brightness}}" />
+      <input
+        type="number"
+        name="blink_brightness"
+        value="{{blink_brightness}}"
+      />
       <br />
       <label>LCD Status on Start:</label>
-      Off <input type="radio" id="lcd_on_start_off" name="lcd_on_start" value="off" {{lcd_on_start_off}}/>
-      On <input type="radio" id="lcd_on_start_on" name="lcd_on_start" value="on" {{lcd_on_start_on}} />
+      Off
+      <input
+        type="radio"
+        id="lcd_on_start_off"
+        name="lcd_on_start"
+        value="off"
+        {{lcd_on_start_off}}
+      />
+      On
+      <input
+        type="radio"
+        id="lcd_on_start_on"
+        name="lcd_on_start"
+        value="on"
+        {{lcd_on_start_on}}
+      />
       <br />
       <input type="submit" value="Save" />
     </form>
+    <br />
+    <br />
+    <p>
+      <a href="/ota">Firmware Upgrade</a>
+    </p>
   </body>
 </html>
