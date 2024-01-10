@@ -36,10 +36,16 @@ jobs:
         run: pio run
 
       - name: Archive artifacts
+        run: |
+          mkdir -p artifacts
+          cp .pio/build/*/*.bin artifacts/
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: builded-artifacts
-          path: .pio/build/*/*.bin
+          path: artifacts/*
 
   release:
     needs: build
@@ -64,8 +70,16 @@ jobs:
       - name: Create GitHub Release
         run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F changelog.md
 
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: builded-artifacts
+          path: artifacts
+
       - name: Upload artifacts to the release
         run: |
-          gh release upload v${{ steps.extract_version.outputs.version }} .pio/build/*/*.bin
+          for file in artifacts/*.bin; do
+            gh release upload v${{ steps.extract_version.outputs.version }} $file;
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
