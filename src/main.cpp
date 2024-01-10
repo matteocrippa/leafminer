@@ -6,10 +6,12 @@
 #include "utils/log.h"
 #include "model/configuration.h"
 #include "network/network.h"
+#include "network/accesspoint.h"
 #include "utils/blink.h"
 #include "miner/miner.h"
 #include "current.h"
 #include "utils/button.h"
+#include "storage/storage.h"
 #if defined(ESP32)
 #include "freertos/task.h"
 #endif // ESP32
@@ -18,16 +20,28 @@
 #endif // HAS_LCD
 
 char TAG_MAIN[] = "Main";
+Configuration configuration = Configuration();
+bool force_ap = false;
 
 void setup()
 {
   Serial.begin(115200);
+  delay(1000);
   l_debug(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
 #if defined(ESP32)
   current_semaphoreInit();
 #endif // ESP32
-  button_setup();
+  storage_setup();
+
+  force_ap = button_setup();
+
+  storage_load(&configuration);
+  if (configuration.wifi_ssid == "" || force_ap)
+  {
+    accesspoint_setup();
+    return;
+  }
 
 #if !defined(HAS_LCD)
   Blink::getInstance().setup();
@@ -65,6 +79,12 @@ void setup()
 
 void loop()
 {
+  if (configuration.wifi_ssid == "" || force_ap)
+  {
+    accesspoint_loop();
+    return;
+  }
+
 #if defined(ESP8266)
   network_loop();
   miner(0, 0);

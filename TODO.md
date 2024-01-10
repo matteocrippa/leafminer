@@ -1,11 +1,14 @@
 # BACKLOG (prioritized)
 
+- [ ] Add ota from web ESP32
+- [ ] Add ota from web ESP8266
+- [ ] Show miner ip (web setup option)
+- [ ] Show clock (web setup option)
+- [ ] Show Accepted/Rejected (web setup option)
+- [ ] Add optional logic to wait for response for miner.submit
+- [ ] New mining ui
 - [ ] Fix blinking
-- [ ] Fix crash LCD GeekMagicClock
-- [ ] Fix crash ESP8266 WDT
-- [ ] Migrate to IDF
 - [ ] Miner `from` value needs to be handled
-- [ ] Fix ESP8266
 - [ ] ESP32-S3 led
 - [ ] Led brightness
 - [ ] [GeekMagicClock SmallTV](https://github.com/GeekMagicClock/smalltv/issues/4)
@@ -14,9 +17,8 @@
 - [ ] Add OTA support via web
 - [ ] Add mDNS support to discover Main node
 - [ ] Introduce proxy mining Main + Nodes to split the nonce in count(nodes)
-- [ ] NVS storage
-- [ ] Remote setup (address.name, pool?)
 - [ ] Add installer
+- [ ] Migrate to IDF
 
 # DONE
 
@@ -65,3 +67,9 @@
 - [x] Fix mining getting stuck
 - [x] Add Accepted / Rejected shares
 - [x] Prepare UI with single + total workers hash rate
+- [x] Add web setup portal
+- [x] Add eeprom/preferences handling for conf
+- [x] Test web and eeprom for ESP8266
+- [x] Fix crash LCD GeekMagicClock
+- [x] Fix crash ESP8266 WDT
+- [x] Fix ESP8266

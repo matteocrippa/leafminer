@@ -19,7 +19,7 @@ uint64_t requestJobId = 0;
 uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
-Configuration configuration = Configuration(WIFI_SSID, WIFI_PASSWORD, ADDRESS, POOL_PASSWORD, POOL_URL, POOL_PORT);
+extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
@@ -86,7 +86,7 @@ void authorize()
     uint64_t next_id = nextId();
     isAuthorized = 0;
     authorizeId = next_id;
-    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.authorize\",\"params\":[\"%s\",\"%s\"]}\n", next_id, configuration.address.c_str(), configuration.password.c_str());
+    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.authorize\",\"params\":[\"%s\",\"%s\"]}\n", next_id, configuration.wallet_address.c_str(), configuration.pool_password.c_str());
     request(payload);
 }
 
@@ -336,7 +336,7 @@ void network_getJob()
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
 {
     char payload[256];
-    snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
+    snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
     request(payload);
 }
 
@@ -348,19 +348,21 @@ void network_task(void *pvParameters)
     }
 }
 
-void network_loop() {
-       char data[NETWORK_BUFFER_SIZE];
-     int len = client.readBytesUntil('\n', data, sizeof(data) - 1);
-        data[len] = '\0';
+void network_loop()
+{
+    char data[NETWORK_BUFFER_SIZE];
+    int len = client.readBytesUntil('\n', data, sizeof(data) - 1);
+    data[len] = '\0';
 
-        // if empty, skip it
-        if(data[0] != '\0') {
-            response(data);
-        }
+    // if empty, skip it
+    if (data[0] != '\0')
+    {
+        response(data);
+    }
 
 #if defined(ESP32)
-        vTaskDelay(1333 / portTICK_PERIOD_MS);
+    vTaskDelay(1333 / portTICK_PERIOD_MS);
 #else
-        delay(1333);
+    delay(1333);
 #endif // ESP32
 }

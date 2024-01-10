@@ -1,65 +1,112 @@
 # LeafMiner ☘️⛏️
 
-A FOSS ESP(\*) device Bitcoin miner.
+LeafMiner is a Free and Open Source Software (FOSS) ESP(\*) device Bitcoin miner.
 
 ![LeafMiner Logo](.github/images/leafminer.png)
 
-**Disclaimer:** Mining a block with LeafMiner is highly unlikely given the current complexity. The primary goal is to provide a learning platform for a deeper understanding of how Bitcoin and SHA256 operate.
+**Disclaimer:** While the chances of successfully mining a block with LeafMiner are highly unlikely due to the current complexity, the primary goal of this project is to serve as a learning platform for gaining a deeper understanding of how Bitcoin and SHA256 operate.
 
 | ![LeafMiner on Lilygo-T-S3](.github/images/leafminer-lilygots3.png) | ![LeafMiner on GeekMagic Clock Small TV](.github/images/leafminer-geekmagicclock-smalltv.png) |
-| :-------------------------------------------------------- |  :- |
-| _Lilygo-T-S3_ |  _GeekMagic Clock - SmallTV_ |
+| :------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------- |
+| _Lilygo-T-S3_                                                       | _GeekMagic Clock - SmallTV_                                                                   |
 
-### Features
+## Features
 
-- [x] SHA256 Optimisation for 64 + 16 structure (aka Midstate)
+- [x] SHA256 Optimization for 64 + 16 structure (aka Midstate)
 - [x] Double Hash Early Exit
 - [x] Support for ESP32 and ESP8266
 
-The SHA256 code uses a tweaked version of [NerdSHA256plus](https://github.com/BitMaker-hub/NerdMiner_v2) by NerdMiner.
+The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github.com/BitMaker-hub/NerdMiner_v2) by NerdMiner.
 
-### Supported Boards:
+## Supported Boards:
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266EX         |   🟧   | ±9 kH/s           |
+| ESP8266           |   🟧   | ±16 kH/s          |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±62 kH/s          |
 | LILYGO-T-S3       |   🟩   | ±62 kH/s          |
 | SMALLTV (ESP8266) |   🟧   | ±16 kH/s          |
 
-_Legenda_
+_Legend_
 | Icon | Description |
-| :- | :- |
+| :--- | :-------------- |
 | 🟩 | Fully functional |
 | 🟧 | Partially functional |
 | 🟥 | Not working |
 
-### Mining method:
+## Mining Method:
 
 - [x] [Solo](docs/solo-mining.md)
 - [ ] [Cascade](docs/cascade-mining.md) (aka 1 Main and N nodes)
 
-# How to use
+# How to Use
 
 ## Requirements
 
 - A supported board
-- Platform.io
+- (optional) VSCode + Platformio.io
 
 ## Build & Install
 
-- Rename the file src/leafminer.template.h into leafminer.h.
-- Edit the content according to your setup.
-- Build and Upload!
+### Flash Binary
 
-Build & Upload.
+- Download the binary file for your board
+
+| Board             | Link      |
+| :---------------- | :-------- |
+| ESP8266           | [0.0.1]() |
+| GeekMagic SmartTV | [0.0.1]() |
+| ESP32             | [0.0.1]() |
+| ESP32-S2          | [0.0.1]() |
+| ESP32-S3          | [0.0.1]() |
+| LILYGO-T-S3       | [0.0.1]() |
+
+- Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
+
+### Build from Scratch
+
+- Clone the project
+- Open in Platformio
+- Upload the project to your board
+
+### Quick Start Guide
+
+Follow these steps to set up your ESP32/ESP8266 with LEAFMINER:
+
+1. **Power Up:**
+   Power up your ESP32/ESP8266 device.
+
+2. **Connect to LEAFMINER WiFi:**
+   Connect to the WiFi network named "LEAFMINER."
+
+3. **Access Configuration Page:**
+   Open your web browser and navigate to [http://192.168.4.1](http://192.168.4.1) if the captive portal doesn't appear automatically.
+
+4. **Provide Information and Save:**
+   Fill out the form, click the save button, and then reboot your device.
+
+   We've set _public-pool.io_ as the default solo pool, but feel free to change it to your preference.
+
+**Verification:**
+If the setup is successful, you'll see your miner in the stats.
+
+### Resetting Setup
+
+If you need to reset the setup flow:
+
+- **For ESP32:**
+  Unplug the USB cable, press and hold the BOOT button, and then plug in the USB cable.
+
+- **For ESP8266:**
+  Unfortunately, you need to erase the flash and reflash, as there's only a physical button for this.
+
+After resetting, rediscover the _LEAFMINER_ WiFi and go through the setup process again.
 
 ## Donate
 
-If you want to support this project:
-Bitcoin - `bc1quqr7agnx6e0k9kn8h24zfj5dueeurhzflt3qjg`
+If you want to support this project, consider donating to the Bitcoin address: `bc1quqr7agnx6e0k9kn8h24zfj5dueeurhzflt3qjg`
 
 ## Credits
 

@@ -28,4 +28,3 @@ Your contributions help keep LeafMiner secure for everyone.
 ## Versioning
 
 This security policy is valid for versions 0.0.1 of LeafMiner.
-

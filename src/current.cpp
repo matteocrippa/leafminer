@@ -68,9 +68,13 @@ void current_setJob(const Notification &notification)
         l_error(TAG_CURRENT, "Subscribe object is null");
         return;
     }
-    if (notification.clean_jobs) {
+    if (notification.clean_jobs)
+    {
         current_job_processed = 0;
-        l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+        if (current_job != nullptr)
+        {
+          l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+        }
     }
     if (current_job_is_valid == 1)
     {

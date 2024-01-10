@@ -25,6 +25,10 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
+      - name: Extract version from leafminer.h
+        id: extract_version
+        run: echo "::set-output name=version::$(grep -oP '(?<=_VERSION ").*?(?=")' leafminer.h)"
+
       - name: Adjust ini for release
         run: sh .github/workflows/release.sh
 
@@ -54,10 +58,10 @@ jobs:
         run: pip install ghrelease
 
       - name: Create GitHub Release
-        run: gh release create v${{ github.run_number }} -t "Release ${{ github.run_number }}" -n "Release ${{ github.run_number }}" -F changelog.md
+        run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F changelog.md
 
       - name: Upload artifacts to the release
         run: |
-          gh release upload v${{ github.run_number }} .pio/build/*/*.bin
+          gh release upload v${{ steps.extract_version.outputs.version }} .pio/build/*/*.bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
