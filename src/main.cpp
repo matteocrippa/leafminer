@@ -87,7 +87,7 @@ void loop()
 
 #if defined(ESP8266)
   network_loop();
-  miner(0, 0);
+  miner(0);
 #endif // ESP8266
 }
 

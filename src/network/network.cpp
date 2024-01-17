@@ -23,6 +23,7 @@ extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
+#define NETWORK_DELAY 1666
 
 /**
  * @brief Generates the next ID for the network.
@@ -361,8 +362,8 @@ void network_loop()
     }
 
 #if defined(ESP32)
-    vTaskDelay(1333 / portTICK_PERIOD_MS);
+    vTaskDelay(NETWORK_DELAY / portTICK_PERIOD_MS);
 #else
-    delay(1333);
+    delay(NETWORK_DELAY);
 #endif // ESP32
 }
