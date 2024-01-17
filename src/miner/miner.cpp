@@ -18,15 +18,10 @@ char TAG_MINER[6] = "Miner";
 #define MINER_UPDATE_HASHES 10000
 #endif
 
-RAM_ATTR void miner(uint32_t core, uint32_t from)
+void miner(uint32_t core)
 {
     try
     {
-        if (current_job == nullptr)
-        {
-            return;
-        }
-
         if (miner_time == 0)
         {
             miner_time = millis();
@@ -36,23 +31,14 @@ RAM_ATTR void miner(uint32_t core, uint32_t from)
         uint32_t winning_nonce = 0;
         uint8_t hash[SHA256M_BLOCK_SIZE];
 
-        // TODO: fix issue with nonce
-        // job->block.nonce = from;
-
-        while (diff_hash < current_getDifficulty())
+        while (1)
         {
 
-            diff_hash = 0;
             miner_hashes++;
 
             if (current_job_is_valid == 0)
             {
                 return;
-            }
-
-            if (miner_hashes % MINER_UPDATE_HASHES == 0)
-            {
-                current_set_hashrate(miner_time, miner_hashes);
             }
 
 #if defined(ESP8266)
@@ -63,9 +49,16 @@ RAM_ATTR void miner(uint32_t core, uint32_t from)
             {
                 continue;
             }
-
+            
             diff_hash = diff_from_target(hash);
+            if (diff_hash > current_getDifficulty()) {
+                break;
+            }
         }
+
+        current_set_hashrate(miner_time, miner_hashes);
+        miner_hashes = 0;
+        miner_time = millis();
 
 #if defined(ESP32)
         l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
@@ -99,7 +92,7 @@ void mineTaskFunction(void *pvParameters)
     uint32_t core = (uint32_t)pvParameters;
     while (1)
     {
-        miner(core, 0);
+        miner(core);
         vTaskDelay(portTICK_PERIOD_MS);
     }
 }
