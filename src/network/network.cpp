@@ -345,7 +345,7 @@ void network_task(void *pvParameters)
 {
     while (true)
     {
-        network_loop();
+            network_loop();
     }
 }
 

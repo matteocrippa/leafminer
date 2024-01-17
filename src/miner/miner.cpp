@@ -62,13 +62,11 @@ void miner(uint32_t core)
 
 #if defined(ESP32)
         l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
-        CURRENT_SEMAPHORE({ network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce); });
-#else
-        network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
+#endif
 #if defined(HAS_LCD)
         screen_loop();
 #endif // HAS_LCD
-#endif
+        network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
 
         current_setHighestDifficulty(diff_hash);
 
