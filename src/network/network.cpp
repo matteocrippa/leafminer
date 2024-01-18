@@ -23,7 +23,7 @@ extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
-#define NETWORK_DELAY 1666
+#define NETWORK_DELAY 1222
 
 /**
  * @brief Generates the next ID for the network.
@@ -345,7 +345,7 @@ void network_task(void *pvParameters)
 {
     while (true)
     {
-            network_loop();
+        network_loop();
     }
 }
 
