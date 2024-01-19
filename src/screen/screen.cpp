@@ -29,8 +29,6 @@ void screen_loop()
     return;
   }
 
-  l_info(TAG_SCREEN, "Screen refresh");
-
   // background
   tft.pushImage(0, 0, WIDTH, HEIGHT, home);
 
