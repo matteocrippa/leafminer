@@ -8,33 +8,18 @@
 #include "screen/screen.h"
 #endif
 
-MEM_ATTR uint64_t miner_hashes = 0;
-MEM_ATTR uint64_t miner_time = 0;
 char TAG_MINER[6] = "Miner";
-
-#if defined(ESP32)
-#define MINER_UPDATE_HASHES 330000
-#else
-#define MINER_UPDATE_HASHES 10000
-#endif
 
 void miner(uint32_t core)
 {
     try
     {
-        if (miner_time == 0)
-        {
-            miner_time = millis();
-        }
-
         double diff_hash = 0;
         uint32_t winning_nonce = 0;
         uint8_t hash[SHA256M_BLOCK_SIZE];
 
         while (1)
         {
-
-            miner_hashes++;
 
             if (current_job_is_valid == 0)
             {
@@ -44,6 +29,8 @@ void miner(uint32_t core)
 #if defined(ESP8266)
             ESP.wdtFeed();
 #endif // ESP8266
+
+            current_increment_hashes();
 
             if (!current_job->pickaxe(hash, winning_nonce))
             {
@@ -56,10 +43,8 @@ void miner(uint32_t core)
             }
         }
 
-        current_set_hashrate(miner_time, miner_hashes);
-        miner_hashes = 0;
-        miner_time = millis();
-
+        current_update_hashrate();
+        
 #if defined(ESP32)
         l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
 #else

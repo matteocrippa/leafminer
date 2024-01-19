@@ -30,6 +30,8 @@ const uint32_t current_get_hash_accepted();
 void current_increment_hash_rejected();
 const uint32_t current_get_hash_rejected();
 void current_increment_processedJob();
+void current_increment_hashes();
+void current_update_hashrate();
 
 // ESP32
 #if defined(ESP32)
