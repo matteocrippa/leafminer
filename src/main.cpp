@@ -29,9 +29,6 @@ void setup()
   delay(1000);
   l_debug(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
-#if defined(ESP32)
-  current_semaphoreInit();
-#endif // ESP32
   storage_setup();
 
   force_ap = button_setup();

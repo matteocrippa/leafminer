@@ -266,25 +266,3 @@ void current_update_hashrate() {
     current_hashes = 0;
     current_hashes_time = millis();
 }
-
-
-#if defined(ESP32)
-
-SemaphoreHandle_t current_mutex;
-
-/**
- * @brief Initializes the current semaphore.
- *
- * This function creates a mutex semaphore using xSemaphoreCreateMutex() function.
- * If the semaphore creation fails, an error message is logged using l_error() function.
- */
-void current_semaphoreInit()
-{
-    current_mutex = xSemaphoreCreateMutex();
-    if (current_mutex == NULL)
-    {
-        l_error(TAG_CURRENT, "Error creating mutex");
-    }
-}
-
-#endif

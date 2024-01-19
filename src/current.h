@@ -32,30 +32,4 @@ const uint32_t current_get_hash_rejected();
 void current_increment_processedJob();
 void current_increment_hashes();
 void current_update_hashrate();
-
-// ESP32
-#if defined(ESP32)
-extern SemaphoreHandle_t current_mutex;
-extern char TAG_CURRENT[8];
-
-#define CURRENT_SEMAPHORE(callback)                             \
-    do                                                          \
-    {                                                           \
-        if (xSemaphoreTake(current_mutex, portMAX_DELAY))       \
-        {                                                       \
-            l_debug(TAG_CURRENT, "@ Semaphore taken");          \
-            callback;                                           \
-            xSemaphoreGive(current_mutex);                      \
-            l_debug(TAG_CURRENT, "@ Semaphore given");          \
-        }                                                       \
-        else                                                    \
-        {                                                       \
-            l_error(TAG_CURRENT, "@!! Semaphore Error taking"); \
-        }                                                       \
-    } while (0)
-
-void current_semaphoreInit();
-
-#endif // ESP32
-
-#endif // CURRENT_H
+#endif

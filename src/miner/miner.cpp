@@ -44,7 +44,7 @@ void miner(uint32_t core)
         }
 
         current_update_hashrate();
-        
+
 #if defined(ESP32)
         l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
 #else
