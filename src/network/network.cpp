@@ -291,11 +291,11 @@ void response(std::string r)
                 l_debug(TAG_NETWORK, "Job (next): %s ready to be mined", current_job->job_id.c_str());
                 current_increment_processedJob();
             }
-            else
-            {
-                network_getJob();
-                network_listen();
-            }
+            // else
+            // {
+            //     network_getJob();
+            //     network_listen();
+            // }
             current_increment_hash_rejected();
         }
     }
