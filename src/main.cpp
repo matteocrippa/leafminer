@@ -60,7 +60,6 @@ void setup()
 #endif // HAS_LCD
 
 #if defined(ESP32)
-  xTaskCreatePinnedToCore(network_task, "networkTask", 10000, NULL, 5, NULL, 0);
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore0", 12192, (void *)0, 1, NULL, 0);
 #if CORE == 2
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
@@ -72,6 +71,7 @@ void setup()
 #endif
 
   network_getJob();
+  network_listen();
 }
 
 void loop()
@@ -83,7 +83,6 @@ void loop()
   }
 
 #if defined(ESP8266)
-  network_loop();
   miner(0);
 #endif // ESP8266
 }

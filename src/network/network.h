@@ -4,6 +4,5 @@
 #include <string>
 void network_getJob();
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce);
-void network_task(void *pvParameters);
-void network_loop();
+void network_listen();
 #endif // NETWORK_H

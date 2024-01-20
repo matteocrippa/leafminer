@@ -53,11 +53,14 @@ void miner(uint32_t core)
 #endif // HAS_LCD
 #endif
 
+        l_debug(TAG_MINER, "[%d] > [%s] > 0x%.8x - diff %.12f", core, current_job->job_id.c_str(), winning_nonce, diff_hash);
         network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
+        if (core == 0)
+        {
+            network_listen();
+        }
 
         current_setHighestDifficulty(diff_hash);
-
-        l_debug(TAG_MINER, "[%d] > [%s] > 0x%.8x - diff %.12f", core, current_job->job_id.c_str(), winning_nonce, diff_hash);
 
         if (littleEndianCompare(hash, current_job->target.value, 32) < 0)
         {

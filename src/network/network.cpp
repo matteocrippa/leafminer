@@ -294,6 +294,7 @@ void response(std::string r)
             else
             {
                 network_getJob();
+                network_listen();
             }
             current_increment_hash_rejected();
         }
@@ -341,29 +342,18 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     request(payload);
 }
 
-void network_task(void *pvParameters)
+void network_listen()
 {
-    while (true)
+    int len = 0;
+    do
     {
-        network_loop();
-    }
-}
-
-void network_loop()
-{
-    char data[NETWORK_BUFFER_SIZE];
-    int len = client.readBytesUntil('\n', data, sizeof(data) - 1);
-    data[len] = '\0';
-
-    // if empty, skip it
-    if (data[0] != '\0')
-    {
-        response(data);
-    }
-
-#if defined(ESP32)
-    vTaskDelay(NETWORK_DELAY / portTICK_PERIOD_MS);
-#else
-    delay(NETWORK_DELAY);
-#endif // ESP32
+        char data[NETWORK_BUFFER_SIZE];
+        len = client.readBytesUntil('\n', data, sizeof(data) - 1);
+        data[len] = '\0';
+        if (data[0] != '\0')
+        {
+            response(data);
+        }
+        delay(100);
+    } while (len > 0);
 }
