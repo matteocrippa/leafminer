@@ -36,9 +36,10 @@ void miner(uint32_t core)
             {
                 continue;
             }
-            
+
             diff_hash = diff_from_target(hash);
-            if (diff_hash > current_getDifficulty()) {
+            if (diff_hash > current_getDifficulty())
+            {
                 break;
             }
         }

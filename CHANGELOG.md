@@ -1,4 +1,5 @@
 # v0.0.2
+
 - Add Webserver setup with captive portal for both ESP32 and ESP8266.
 - Add LCD on start status handler.
 - Prepared support for OTA.

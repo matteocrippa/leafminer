@@ -75,7 +75,7 @@ void current_setJob(const Notification &notification)
         current_job_is_valid = 0;
         if (current_job != nullptr)
         {
-          l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+            l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
         }
     }
     if (current_job_is_valid == 1)
@@ -253,14 +253,17 @@ const uint32_t current_get_hash_rejected()
     return current_hash_rejected;
 }
 
-void current_increment_hashes() {
-    if (current_hashes_time == 0) {
+void current_increment_hashes()
+{
+    if (current_hashes_time == 0)
+    {
         current_hashes_time = millis();
     }
     current_hashes++;
 }
 
-void current_update_hashrate() {
+void current_update_hashrate()
+{
     current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
     l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
     current_hashes = 0;

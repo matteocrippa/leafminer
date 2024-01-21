@@ -54,60 +54,63 @@ std::string prepareHtmlWithValues(const Configuration &configuration)
     return html;
 }
 
-void accesspoint_print_error() {
-    #if defined(ESP32)
+void accesspoint_print_error()
+{
+#if defined(ESP32)
     std::string error = Update.errorString();
-    #else
+#else
     std::string error = Update.getErrorString().c_str();
-    #endif
+#endif
     l_error(TAG_AP, "Update Failed: %s", error.c_str());
 }
 
 void accesspoint_webserver()
 {
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         String html = String(prepareHtmlWithValues(configuration).c_str());
-        request->send(200, "text/html", html);
-    });
+        request->send(200, "text/html", html); });
 
-    server.on("/ota", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "text/html", String(html_ota.c_str()));
-    });
+    server.on("/ota", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/html", String(html_ota.c_str())); });
 
-    server.on("/upload", HTTP_POST, [](AsyncWebServerRequest *request) {
-        request->send(200, "text/html", "Uploading firmware...<br/><br/>Please wait...<br/><br/>Device will reboot automatically after update is completed.<br/><br/>");
-    }, [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-		if (!index)
-		{
-            l_debug(TAG_AP, "Update Start: %s", filename.c_str());
-			if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000))
-			{
-                accesspoint_print_error();
-			}
-		}
-		if (!Update.hasError())
-		{
-			if (Update.write(data, len) != len)
-			{
-                accesspoint_print_error();
-			}
-		}
-		if (final)
-		{
-			if (Update.end(true))
-			{
-                l_debug(TAG_AP, "Update success. Please manually reboot...");
-                delay(1000);
-                ESP.restart();
-			}
-			else
-			{
-                accesspoint_print_error();
-			}
-		} 
-	});
+    server.on(
+        "/upload", HTTP_POST, [](AsyncWebServerRequest *request)
+        { request->send(200, "text/html", "Uploading firmware...<br/><br/>Please wait...<br/><br/>Device will reboot automatically after update is completed.<br/><br/>"); },
+        [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
+        {
+            if (!index)
+            {
+                l_debug(TAG_AP, "Update Start: %s", filename.c_str());
+                if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000))
+                {
+                    accesspoint_print_error();
+                }
+            }
+            if (!Update.hasError())
+            {
+                if (Update.write(data, len) != len)
+                {
+                    accesspoint_print_error();
+                }
+            }
+            if (final)
+            {
+                if (Update.end(true))
+                {
+                    l_debug(TAG_AP, "Update success. Please manually reboot...");
+                    delay(1000);
+                    ESP.restart();
+                }
+                else
+                {
+                    accesspoint_print_error();
+                }
+            }
+        });
 
-    server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
+    server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
         Configuration conf = Configuration();
         conf.wifi_ssid = request->arg("wifi_ssid").c_str();
         conf.wifi_password = request->arg("wifi_password").c_str();
@@ -120,12 +123,10 @@ void accesspoint_webserver()
         conf.lcd_on_start = request->arg("lcd_on_start").c_str();
         storage_save(conf);
 
-        request->send(200, "text/html", "<html><body>Data saved successfully!<br/><br/>Please reboot your board!</body></html>");
-    });
+        request->send(200, "text/html", "<html><body>Data saved successfully!<br/><br/>Please reboot your board!</body></html>"); });
 
-    server.onNotFound([](AsyncWebServerRequest *request) {
-        request->redirect("/");
-    });
+    server.onNotFound([](AsyncWebServerRequest *request)
+                      { request->redirect("/"); });
 
     server.begin();
     l_debug(TAG_AP, "Webserver Started");
