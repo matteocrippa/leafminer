@@ -1,3 +1,9 @@
+# v0.0.3
+- Improved speed and stability
+- Reworked networking logic
+- Improved support for ESP8266
+- Tweaked web setup
+
 # v0.0.2
 
 - Add Webserver setup with captive portal for both ESP32 and ESP8266.
