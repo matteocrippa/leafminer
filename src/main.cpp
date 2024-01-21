@@ -29,9 +29,6 @@ void setup()
   delay(1000);
   l_debug(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
-#if defined(ESP32)
-  current_semaphoreInit();
-#endif // ESP32
   storage_setup();
 
   force_ap = button_setup();
@@ -71,10 +68,10 @@ void setup()
 #if defined(HAS_LCD)
   xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
 #endif // HAS_LCD
-  xTaskCreatePinnedToCore(network_task, "networkTask", 10000, NULL, 5, NULL, 0);
 #endif
 
   network_getJob();
+  network_listen();
 }
 
 void loop()
@@ -86,8 +83,7 @@ void loop()
   }
 
 #if defined(ESP8266)
-  network_loop();
-  miner(0, 0);
+  miner(0);
 #endif // ESP8266
 }
 

@@ -1,7 +1,5 @@
 # BACKLOG (prioritized)
 
-- [ ] Add ota from web ESP32
-- [ ] Add ota from web ESP8266
 - [ ] Show miner ip (web setup option)
 - [ ] Show clock (web setup option)
 - [ ] Show Accepted/Rejected (web setup option)
@@ -73,3 +71,5 @@
 - [x] Fix crash LCD GeekMagicClock
 - [x] Fix crash ESP8266 WDT
 - [x] Fix ESP8266
+- [x] Add ota from web ESP32
+- [x] Add ota from web ESP8266

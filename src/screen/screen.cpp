@@ -6,8 +6,11 @@
 #include "lilygo-t-s3-include.h"
 #include "geekmagicclock-smalltv-include.h"
 
+#define SCREEN_REFRESH 3000
+
 TFT_eSPI tft = TFT_eSPI();
 bool screen_enabled = true;
+char TAG_SCREEN[] = "Screen";
 
 void screen_setup()
 {
@@ -22,6 +25,7 @@ void screen_loop()
 {
   if (!screen_enabled)
   {
+    l_info(TAG_SCREEN, "Screen disabled");
     return;
   }
 
@@ -81,7 +85,7 @@ void screenTaskFunction(void *pvParameters)
   while (1)
   {
     screen_loop();
-    vTaskDelay(1500 / portTICK_PERIOD_MS);
+    vTaskDelay(SCREEN_REFRESH / portTICK_PERIOD_MS);
   }
 }
 #endif

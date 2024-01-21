@@ -24,6 +24,8 @@ uint64_t current_block_found = 0;
 uint64_t current_hash_accepted = 0;
 uint64_t current_hash_rejected = 0;
 
+uint32_t current_hashes = 0;
+uint64_t current_hashes_time = 0;
 double current_hashrate = 0;
 
 uint64_t current_uptime = millis();
@@ -70,10 +72,10 @@ void current_setJob(const Notification &notification)
     }
     if (notification.clean_jobs)
     {
-        current_job_processed = 0;
+        current_job_is_valid = 0;
         if (current_job != nullptr)
         {
-          l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+            l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
         }
     }
     if (current_job_is_valid == 1)
@@ -192,22 +194,6 @@ const uint32_t current_get_block_found()
 }
 
 /**
- * @brief Sets the hashrate for a specific core.
- *
- * This function calculates the hashrate for a specific core based on the number of hashes performed
- * within a given time period. The hashrate is then stored in the `hashrate` array.
- *
- * @param core The core for which to set the hashrate.
- * @param time The starting time of the hash calculation.
- * @param hashes The number of hashes performed within the given time period.
- */
-void current_set_hashrate(const uint64_t &time, const uint64_t &hashes)
-{
-    current_hashrate = (hashes / ((millis() - time) / 1000.0)) / 1000.0; // KH/s
-    l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
-}
-
-/**
  * @brief Get the hashrate value.
  *
  * This function returns the current hashrate value.
@@ -267,23 +253,19 @@ const uint32_t current_get_hash_rejected()
     return current_hash_rejected;
 }
 
-#if defined(ESP32)
-
-SemaphoreHandle_t current_mutex;
-
-/**
- * @brief Initializes the current semaphore.
- *
- * This function creates a mutex semaphore using xSemaphoreCreateMutex() function.
- * If the semaphore creation fails, an error message is logged using l_error() function.
- */
-void current_semaphoreInit()
+void current_increment_hashes()
 {
-    current_mutex = xSemaphoreCreateMutex();
-    if (current_mutex == NULL)
+    if (current_hashes_time == 0)
     {
-        l_error(TAG_CURRENT, "Error creating mutex");
+        current_hashes_time = millis();
     }
+    current_hashes++;
 }
 
-#endif
+void current_update_hashrate()
+{
+    current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
+    l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+    current_hashes = 0;
+    current_hashes_time = millis();
+}

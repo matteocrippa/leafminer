@@ -23,6 +23,7 @@ extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
+#define NETWORK_DELAY 1222
 
 /**
  * @brief Generates the next ID for the network.
@@ -236,6 +237,7 @@ void response(std::string r)
             {
                 merkleBranchStrings.push_back(cJSON_GetArrayItem(merkle_branch, i)->valuestring);
             }
+            requestJobId = nextId();
 
             current_setJob(Notification(job_id, prevhash, coinb1, coinb2, merkleBranchStrings, version, nbits, ntime, clean_jobs));
             isRequestingJob = 0;
@@ -290,10 +292,6 @@ void response(std::string r)
                 l_debug(TAG_NETWORK, "Job (next): %s ready to be mined", current_job->job_id.c_str());
                 current_increment_processedJob();
             }
-            else
-            {
-                network_getJob();
-            }
             current_increment_hash_rejected();
         }
     }
@@ -329,8 +327,6 @@ void network_getJob()
         authorize();
         difficulty();
     }
-
-    requestJobId = nextId();
 }
 
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
@@ -340,29 +336,20 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     request(payload);
 }
 
-void network_task(void *pvParameters)
+void network_listen()
 {
-    while (true)
+    int len = 0;
+    do
     {
-        network_loop();
-    }
-}
-
-void network_loop()
-{
-    char data[NETWORK_BUFFER_SIZE];
-    int len = client.readBytesUntil('\n', data, sizeof(data) - 1);
-    data[len] = '\0';
-
-    // if empty, skip it
-    if (data[0] != '\0')
-    {
-        response(data);
-    }
-
+        char data[NETWORK_BUFFER_SIZE];
+        len = client.readBytesUntil('\n', data, sizeof(data) - 1);
+        data[len] = '\0';
+        if (data[0] != '\0')
+        {
+            response(data);
+        }
 #if defined(ESP32)
-    vTaskDelay(1333 / portTICK_PERIOD_MS);
-#else
-    delay(1333);
-#endif // ESP32
+        delay(100);
+#endif
+    } while (len > 0);
 }

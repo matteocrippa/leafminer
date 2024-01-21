@@ -12,10 +12,13 @@
 #define BUTTON_PIN 0
 #endif
 
-bool button_setup() {
-  if (BUTTON_PIN != -1) {
+bool button_setup()
+{
+  if (BUTTON_PIN != -1)
+  {
     pinMode(BUTTON_PIN, INPUT_PULLUP);
-    if (digitalRead(BUTTON_PIN) == LOW) {
+    if (digitalRead(BUTTON_PIN) == LOW)
+    {
       return true;
     }
   }

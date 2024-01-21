@@ -5,6 +5,6 @@
 #if defined(ESP32)
 void mineTaskFunction(void *pvParameters);
 #else
-RAM_ATTR void miner(uint32_t core, uint32_t from);
+void miner(uint32_t core);
 #endif // ESP32
 #endif // MINER_H
