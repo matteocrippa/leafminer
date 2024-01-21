@@ -237,6 +237,7 @@ void response(std::string r)
             {
                 merkleBranchStrings.push_back(cJSON_GetArrayItem(merkle_branch, i)->valuestring);
             }
+            requestJobId = nextId();
 
             current_setJob(Notification(job_id, prevhash, coinb1, coinb2, merkleBranchStrings, version, nbits, ntime, clean_jobs));
             isRequestingJob = 0;
@@ -291,11 +292,6 @@ void response(std::string r)
                 l_debug(TAG_NETWORK, "Job (next): %s ready to be mined", current_job->job_id.c_str());
                 current_increment_processedJob();
             }
-            // else
-            // {
-            //     network_getJob();
-            //     network_listen();
-            // }
             current_increment_hash_rejected();
         }
     }
@@ -331,8 +327,6 @@ void network_getJob()
         authorize();
         difficulty();
     }
-
-    requestJobId = nextId();
 }
 
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
