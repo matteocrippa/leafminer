@@ -54,14 +54,14 @@ _Legend_
 
 - Download the binary file for your board
 
-| Board             | Link      |
-| :---------------- | :-------- |
-| ESP8266           | [0.0.1]() |
-| GeekMagic SmartTV | [0.0.1]() |
-| ESP32             | [0.0.1]() |
-| ESP32-S2          | [0.0.1]() |
-| ESP32-S3          | [0.0.1]() |
-| LILYGO-T-S3       | [0.0.1]() |
+| Board                                                    | Link                                                        |
+| :------------------------------------------------------- | :---------------------------------------------------------- |
+| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
+| [GeekMagic SmartTV]()                                    | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
+| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.3](https://github.com/matteocrippa/leafminer/releases) |
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
 
@@ -106,7 +106,11 @@ After resetting, rediscover the _LEAFMINER_ WiFi and go through the setup proces
 
 ## Donate
 
-If you want to support this project, consider donating to the Bitcoin address: `bc1quqr7agnx6e0k9kn8h24zfj5dueeurhzflt3qjg`
+If you want to support this project, consider donating:
+
+| AliExpress Referral | Use referral links in the list of hardware above |
+| ⚡️ Lightning | `lnbc1pj66awapp5es8krc52qvpcaxj4psf5l645rns48l8rxqw9yrhjg78rgx4j0kescqpjsp5e8mwfsrvmh5mjr48x2yca9xrtjte56pf85e3jyw6mumvkadjf5ms9q7sqqqqqqqqqqqqqqqqqqqsqqqqqysgqdqqmqz9gxqyjw5qrzjqwryaup9lh50kkranzgcdnn2fgvx390wgj5jd07rwr3vxeje0glcllul0fkxuh06uqqqqqlgqqqqqeqqjq0p50pdcqt5tvsgtwx2yzc8qehkm8e6vfytjahutne4m3drhwywy8zmq3xl6hg3kpu90jwm2qytqu65w5y5g9t50he43xgslvp2ayjxsq5rycse`|
+| Bitcoin |`bc1quqr7agnx6e0k9kn8h24zfj5dueeurhzflt3qjg` |
 
 ## Credits
 
