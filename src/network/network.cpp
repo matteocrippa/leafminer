@@ -348,6 +348,8 @@ void network_listen()
         {
             response(data);
         }
+        #if defined(ESP32)
         delay(100);
+        #endif
     } while (len > 0);
 }
