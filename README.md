@@ -25,8 +25,8 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 | ESP8266           |   🟧   | ±16 kH/s          |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
-| ESP32-S3          |   🟩   | ±62 kH/s          |
-| LILYGO-T-S3       |   🟩   | ±62 kH/s          |
+| ESP32-S3          |   🟩   | ±80 kH/s          |
+| LILYGO-T-S3       |   🟩   | ±80 kH/s          |
 | SMALLTV (ESP8266) |   🟧   | ±16 kH/s          |
 
 _Legend_
