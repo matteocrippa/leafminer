@@ -4,7 +4,7 @@ permissions:
   contents: write
 
 env:
-  GH_TOKEN: ${{ github.token }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   push:
@@ -16,34 +16,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/pip
             ~/.platformio/.cache
-          key: ${{ runner.os }}-pio
-      
-      - uses: actions/setup-python@v4
+          key: ${{ runner.os }}-pio-${{ hashFiles('**/*.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
+
+      - name: Set Up Python
+        uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
-      - name: Adjust ini for release
+      - name: Adjust INI for Release
         run: sh .github/scripts/release.sh
 
       - name: Build PlatformIO Project
         run: pio run
 
-      - name: Archive artifacts
+      - name: Archive Artifacts
         run: |
           mkdir -p artifacts
           find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
         working-directory: ${{ github.workspace }}
 
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: builded-artifacts
@@ -52,29 +58,28 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Extract version from leafminer.h
+      - name: Extract Version from leafminer.h
         id: extract_version
-        run: echo "::set-output name=version::$(grep -oP '(?<=_VERSION ").*?(?=")' leafminer.h)"
+        run: echo "::set-output name=version::$(grep -o '_VERSION "[^"]*' src/leafminer.h | cut -d'"' -f2)"
 
       - name: Create GitHub Release
         run: gh release create v${{ steps.extract_version.outputs.version }} -t "Release ${{ steps.extract_version.outputs.version }}" -n "Release ${{ steps.extract_version.outputs.version }}" -F CHANGELOG.md
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           name: builded-artifacts
           path: artifacts
 
-      - name: Upload artifacts to the release
+      - name: Upload Artifacts to Release
         run: |
           for file in artifacts/*.bin; do
-            gh release upload v${{ steps.extract_version.outputs.version }} $file;
+            gh release upload v${{ steps.extract_version.outputs.version }} "$file" --clobber;
           done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
