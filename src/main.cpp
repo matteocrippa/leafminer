@@ -60,7 +60,7 @@ void setup()
 #endif // HAS_LCD
 
 #if defined(ESP32)
-  xTaskCreatePinnedToCore(currentTaskFunction, "checkStale", 1024, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(currentTaskFunction, "checkStale", 1024, NULL, 4, NULL, 0);
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore0", 12192, (void *)0, 1, NULL, 0);
 #if CORE == 2
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
