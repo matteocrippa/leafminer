@@ -1,5 +1,6 @@
 # BACKLOG (prioritized)
 
+- [ ] Restore random nonce2
 - [ ] Show miner ip (web setup option)
 - [ ] Show clock (web setup option)
 - [ ] Show Accepted/Rejected (web setup option)
