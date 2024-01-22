@@ -21,7 +21,7 @@ public:
     Block block;
     Target target;
     std::string job_id;
-    std::string extranonce2 = "00000002";
+    std::string extranonce2;
     std::string ntime;
 
     // Constructor
@@ -39,9 +39,10 @@ private:
     void nextNonce();
     void generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash);
     void calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root);
+    std::string generate_extra_nonce2(int extranonce2_size);
 
     nerdSHA256_context sha;
-    std::string TAG_JOB = "Job";
+    char TAG_JOB[4] = "Job";
     double difficulty;
 };
 #endif

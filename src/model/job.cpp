@@ -1,4 +1,6 @@
 #include "job.h"
+#include "TridentTD_ESP_TrueRandom.h"
+#include <climits>
 
 // Constructor
 Job::Job(const Notification &notification, const Subscribe &subscribe, double difficulty) : difficulty(difficulty)
@@ -17,8 +19,9 @@ Job::Job(const Notification &notification, const Subscribe &subscribe, double di
     job_id = notification.job_id;
     ntime = ntime_string;
 
+    extranonce2 = generate_extra_nonce2(subscribe.extranonce2_size);
     std::string coinbase = notification.coinb1 + subscribe.extranonce1 + extranonce2 + notification.coinb2;
-    l_info(TAG_JOB.c_str(), "[%s] - Coinbase: %s", job_id.c_str(), coinbase.c_str());
+    l_info(TAG_JOB, "[%s] - Coinbase: %s", job_id.c_str(), coinbase.c_str());
 
     std::string coinbase_hash;
     generateCoinbaseHash(coinbase, coinbase_hash);
@@ -77,7 +80,7 @@ void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbas
 
     // Convert binary hash to hex string
     coinbase_hash = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
-    l_info(TAG_JOB.c_str(), "[%s] - Coinbase hash: %s", job_id.c_str(), coinbase_hash.c_str());
+    l_info(TAG_JOB, "[%s] - Coinbase hash: %s", job_id.c_str(), coinbase_hash.c_str());
 }
 
 void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root)
@@ -90,7 +93,7 @@ void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vecto
         uint8_t merkle_branch_bin[32];
         hexStringToByteArray(merkle_branch[i].c_str(), merkle_branch_bin);
 
-        l_info(TAG_JOB.c_str(), "[%s] - Merkle Branch [%d]: %s", job_id.c_str(), i, merkle_branch[i].c_str());
+        l_info(TAG_JOB, "[%s] - Merkle Branch [%d]: %s", job_id.c_str(), i, merkle_branch[i].c_str());
 
         uint8_t merkle_concatenated[SHA256M_BLOCK_SIZE * 2];
 
@@ -104,4 +107,33 @@ void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vecto
     }
 
     merkle_root = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
+}
+
+std::string Job::generate_extra_nonce2(int extranonce2_size)
+{
+    // Generate a random number between 0 and ULONG_MAX
+    int randomValue = esp.random(0, INT_MAX);
+    l_info(TAG_JOB, "[%s] - Random value: %d", randomValue);
+
+    // Calculate the required length of the hex string
+    int hexStringLength = 2 * extranonce2_size + 1; // 2 characters per byte + 1 for null terminator
+
+    // Allocate memory for the extranonce2 string
+    char *extranonce2 = new char[hexStringLength];
+
+    // Convert the random number to a hex string
+    snprintf(extranonce2, hexStringLength, "%d", randomValue);
+
+    // Ensure the hex string is padded to the required length
+    while ((int)strlen(extranonce2) < hexStringLength - 1)
+    {
+        char *temp = new char[hexStringLength];
+        snprintf(temp, hexStringLength, "0%s", extranonce2);
+        delete[] extranonce2;
+        extranonce2 = temp;
+    }
+
+    l_info(TAG_JOB, "ExtraNonce2: %s", extranonce2);
+
+    return std::string(extranonce2);
 }
