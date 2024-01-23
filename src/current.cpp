@@ -29,6 +29,7 @@ uint64_t current_hashes_time = 0;
 double current_hashrate = 0;
 
 uint64_t current_uptime = millis();
+uint64_t current_last_hash = millis();
 
 /**
  * @brief Increments the count of processed jobs.
@@ -234,6 +235,7 @@ const double current_getHighestDifficulty()
 void current_increment_hash_accepted()
 {
     current_hash_accepted++;
+    current_last_hash = millis();
     l_info(TAG_CURRENT, "Hash accepted: %d", current_hash_accepted);
 }
 
@@ -245,6 +247,7 @@ const uint32_t current_get_hash_accepted()
 void current_increment_hash_rejected()
 {
     current_hash_rejected++;
+    current_last_hash = millis();
     l_info(TAG_CURRENT, "Hash rejected: %d", current_hash_rejected);
 }
 
@@ -269,3 +272,20 @@ void current_update_hashrate()
     current_hashes = 0;
     current_hashes_time = millis();
 }
+
+void current_check_stale() {
+    if (millis() - current_last_hash > 60000 * 5) {
+        l_error(TAG_CURRENT, "No hash received in the last 5 minutes. Restarting...");
+        ESP.restart();
+    }
+}
+
+#if defined(ESP32)
+#define CURRENT_STALE_TIMEOUT 60000 * 2
+void currentTaskFunction(void *pvParameters) {
+  while(1) {
+    current_check_stale();
+    vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
+  }
+}
+#endif

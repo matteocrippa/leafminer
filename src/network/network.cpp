@@ -24,6 +24,8 @@ extern Configuration configuration;
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
 #define NETWORK_DELAY 1222
+#define NETWORK_WIFI_ATTEMPTS 2
+#define NETWORK_STRATUM_ATTEMPTS 2
 
 /**
  * @brief Generates the next ID for the network.
@@ -43,28 +45,55 @@ uint64_t nextId()
  *
  * @note This function requires the configuration to be set.
  */
-void isConnected()
+short isConnected()
 {
 
     if (WiFi.status() == WL_CONNECTED && client.connected())
     {
-        return;
+        return 1;
     }
 
+    uint16_t wifi_attemps = 0;
+
     // check if we are already connected to WiFi
-    while (WiFi.waitForConnectResult() != WL_CONNECTED)
+    while (wifi_attemps < NETWORK_WIFI_ATTEMPTS)
     {
         l_info(TAG_NETWORK, "Connecting to %s...", configuration.wifi_ssid.c_str());
         WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
+        wifi_attemps++;
+        delay(500);
+        if(WiFi.waitForConnectResult() == WL_CONNECTED) {
+            break;
+        }
         delay(2000);
     }
 
-    // and we are connected to the host
-    while (!client.connect(configuration.pool_url.c_str(), configuration.pool_port))
-    {
-        delay(2000);
-        l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
+    if(WiFi.waitForConnectResult() != WL_CONNECTED) {
+        l_error(TAG_NETWORK, "Unable to connect to WiFi");
+        return -1;
     }
+
+    uint16_t wifi_stratum = 0;
+
+    // and we are connected to the host
+    while (wifi_stratum < NETWORK_STRATUM_ATTEMPTS)
+    {
+        l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
+        client.connect(configuration.pool_url.c_str(), configuration.pool_port);
+        delay(500);
+        if(client.connected()) {
+            break;
+        }   
+        wifi_stratum++;
+        delay(2000);
+    }
+
+    if(!client.connected()) {
+        l_error(TAG_NETWORK, "Unable to connect to host");
+        return -1;
+    }
+
+    return 1;
 }
 
 /**
@@ -303,23 +332,25 @@ void response(std::string r)
     r.clear();
 }
 
-void network_getJob()
+short network_getJob()
 {
     if (current_job_is_valid == 1)
     {
         l_info(TAG_NETWORK, "Already has a job and don't need a new one");
-        return;
+        return 0;
     }
 
     if (isRequestingJob == 1)
     {
         l_info(TAG_NETWORK, "Already requesting a job");
-        return;
+        return 0;
     }
 
     isRequestingJob = 1;
 
-    isConnected();
+    if(isConnected() == -1) {
+        return -1;
+    }
 
     if (current_getSessionId() == nullptr)
     {
@@ -327,6 +358,8 @@ void network_getJob()
         authorize();
         difficulty();
     }
+
+    return 1;
 }
 
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
@@ -339,6 +372,7 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 void network_listen()
 {
     int len = 0;
+    isConnected();
     do
     {
         char data[NETWORK_BUFFER_SIZE];

@@ -18,5 +18,7 @@
 #define TEXT_DIFF_Y 110
 #define TEXT_RATE_X 10
 #define TEXT_RATE_Y 180
+#define TEXT_SESSION_X 150
+#define TEXT_SESSION_Y 150
 #endif
 #endif // GEEKMAGICCLOCK_SMALLTV_INCLUDE_H

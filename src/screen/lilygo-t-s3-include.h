@@ -18,5 +18,7 @@
 #define TEXT_DIFF_Y 110
 #define TEXT_RATE_X 10
 #define TEXT_RATE_Y 120
+#define TEXT_SESSION_X 250
+#define TEXT_SESSION_Y 140
 #endif
 #endif

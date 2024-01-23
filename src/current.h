@@ -32,4 +32,8 @@ const uint32_t current_get_hash_rejected();
 void current_increment_processedJob();
 void current_increment_hashes();
 void current_update_hashrate();
+void current_check_stale();
+#if defined(ESP32)
+void currentTaskFunction(void *pvParameters);
+#endif
 #endif
