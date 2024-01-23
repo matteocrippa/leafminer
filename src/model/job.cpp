@@ -117,11 +117,11 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
 {
     // Generate a random number between 0 and ULONG_MAX
     #if defined(ESP8266)
-    int randomValue = esp.random(0, INT_MAX);
+    uint32_t randomValue = esp.random(0, INT_MAX);
     #else 
-    int randomValue = esp_random();
+    uint32_t randomValue = esp_random();
     #endif
-    l_info(TAG_JOB, "Random value: %d", randomValue);
+    l_info(TAG_JOB, "Random value: %u", randomValue);
 
     // Calculate the required length of the hex string
     int hexStringLength = 2 * extranonce2_size + 1; // 2 characters per byte + 1 for null terminator
@@ -130,7 +130,7 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
     char *extranonce2 = new char[hexStringLength];
 
     // Convert the random number to a hex string
-    snprintf(extranonce2, hexStringLength, "%d", randomValue);
+    snprintf(extranonce2, hexStringLength, "%u", randomValue);
 
     // Ensure the hex string is padded to the required length
     while ((int)strlen(extranonce2) < hexStringLength - 1)
