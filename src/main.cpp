@@ -48,9 +48,6 @@ void setup()
   Blink::getInstance().blink(BLINK_START);
 #else
   screen_setup();
-#if defined(ESP32)
-  xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
-#endif
 #endif // HAS_LCD
 
   storage_load(&configuration);
@@ -67,6 +64,9 @@ void setup()
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
 #endif // CORE == 2
   xTaskCreatePinnedToCore(buttonTaskFunction, "buttonTask", 2048, NULL, 4, NULL, 0);
+  #if defined(HAS_LCD)
+  xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
+#endif
 #endif
 
   network_getJob();
