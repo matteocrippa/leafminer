@@ -69,7 +69,13 @@ void setup()
 #endif
 #endif
 
-  network_getJob();
+  if (network_getJob() == -1) {
+    l_error(TAG_MAIN, "Failed to connect to network");
+    l_info(TAG_MAIN, "Fallback to AP mode");
+    force_ap = true;
+    accesspoint_setup();
+    return;
+  }
   network_listen();
 }
 
