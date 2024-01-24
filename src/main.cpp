@@ -42,20 +42,20 @@ void setup()
 
   force_ap = button_setup();
 
-#if !defined(HAS_LCD)
-  Blink::getInstance().setup();
-  delay(500);
-  Blink::getInstance().blink(BLINK_START);
-#else
-  screen_setup();
-#endif // HAS_LCD
-
   storage_load(&configuration);
   if (configuration.wifi_ssid == "" || force_ap)
   {
     accesspoint_setup();
     return;
   }
+
+  #if !defined(HAS_LCD)
+  Blink::getInstance().setup();
+  delay(500);
+  Blink::getInstance().blink(BLINK_START);
+#else
+  screen_setup();
+#endif // HAS_LCD
 
 #if defined(ESP32)
   xTaskCreatePinnedToCore(currentTaskFunction, "checkStale", 1024, NULL, 4, NULL, 0);
@@ -64,12 +64,13 @@ void setup()
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
 #endif // CORE == 2
   xTaskCreatePinnedToCore(buttonTaskFunction, "buttonTask", 2048, NULL, 4, NULL, 0);
-  #if defined(HAS_LCD)
+#if defined(HAS_LCD)
   xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
 #endif
 #endif
 
-  if (network_getJob() == -1) {
+  if (network_getJob() == -1)
+  {
     l_error(TAG_MAIN, "Failed to connect to network");
     l_info(TAG_MAIN, "Fallback to AP mode");
     force_ap = true;
