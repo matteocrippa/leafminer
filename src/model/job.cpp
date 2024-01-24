@@ -27,6 +27,10 @@ Job::Job(const Notification &notification, const Subscribe &subscribe, double di
     std::string coinbase = notification.coinb1 + subscribe.extranonce1 + extranonce2 + notification.coinb2;
     l_info(TAG_JOB, "[%s] - Coinbase: %s", job_id.c_str(), coinbase.c_str());
 
+    #if defined(ESP8266)
+    ESP.wdtFeed();
+    #endif
+
     std::string coinbase_hash;
     generateCoinbaseHash(coinbase, coinbase_hash);
 
