@@ -15,7 +15,7 @@
 #include "utils/platform.h"
 #include "utils/log.h"
 
-const std::string AUTOUPDATE_URL = "https://raw.githubusercontent.com/matteocrippa/leafminer/feature/v0.0.5/version.json"; //"https://raw.githubusercontent.com/matteocrippa/leafminer/main/version.json";
+const std::string AUTOUPDATE_URL = "https://raw.githubusercontent.com/matteocrippa/leafminer/main/version.json";
 const char TAG_AUTOUPDATE[] = "autoupdate";
 
 #if defined(ESP8266_D)
