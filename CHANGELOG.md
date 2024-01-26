@@ -5,5 +5,4 @@
 - Add Github action to check version
 - Add version.json file
 - Add device value in platform
-
 - Add auto OTA update check on start
