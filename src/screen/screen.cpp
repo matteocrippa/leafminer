@@ -1,6 +1,7 @@
 #include <TFT_eSPI.h>
 #include "screen.h"
 #include "utils/log.h"
+#include "model/configuration.h"
 #include "current.h"
 #include "leafminer.h"
 #include "lilygo-t-s3-include.h"
@@ -11,6 +12,7 @@
 TFT_eSPI tft = TFT_eSPI();
 bool screen_enabled = true;
 char TAG_SCREEN[] = "Screen";
+extern Configuration configuration;
 
 void screen_setup()
 {
@@ -19,6 +21,17 @@ void screen_setup()
   tft.setSwapBytes(true);
   tft.pushImage(0, 0, WIDTH, HEIGHT, splash);
   delay(1500);
+
+  if (configuration.lcd_on_start == "off")
+  {
+    screen_enabled = false;
+    tft.writecommand(TFT_DISPOFF);
+  }
+  else
+  {
+    screen_enabled = true;
+    tft.writecommand(TFT_DISPON);
+  }
 }
 
 void screen_loop()

@@ -1,22 +1,17 @@
 # BACKLOG (prioritized)
 
-- [ ] Restore random nonce2
 - [ ] Show miner ip (web setup option)
 - [ ] Show clock (web setup option)
 - [ ] Show Accepted/Rejected (web setup option)
-- [ ] Add optional logic to wait for response for miner.submit
 - [ ] New mining ui
 - [ ] Fix blinking
 - [ ] Miner `from` value needs to be handled
 - [ ] ESP32-S3 led
 - [ ] Led brightness
-- [ ] [GeekMagicClock SmallTV](https://github.com/GeekMagicClock/smalltv/issues/4)
 - [ ] Increase to, at least, 20kH/s for ESP8266
 - [ ] Add support for .66 inch OLED
-- [ ] Add OTA support via web
 - [ ] Add mDNS support to discover Main node
 - [ ] Introduce proxy mining Main + Nodes to split the nonce in count(nodes)
-- [ ] Add installer
 - [ ] Migrate to IDF
 
 # DONE
@@ -74,3 +69,8 @@
 - [x] Fix ESP8266
 - [x] Add ota from web ESP32
 - [x] Add ota from web ESP8266
+- [x] Restore random nonce2
+- [x] [GeekMagicClock SmallTV](https://github.com/GeekMagicClock/smalltv/issues/4)
+- [x] Add installer
+- [x] Add OTA support via web
+- [x] Fix unit tests

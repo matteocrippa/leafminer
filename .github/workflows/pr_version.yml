@@ -1,0 +1,44 @@
+name: Check and Update Version
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  checkAndUpdateVersion:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Extract Version from leafminer.h
+      id: extract_version
+      run: |
+        echo "::set-output name=version::$(grep -o '_VERSION "[^"]*' src/leafminer.h | cut -d'"' -f2)"
+        echo "Extracted version: ${{ steps.extract_version.outputs.version }}"
+
+    - name: Read current version from version.json
+      id: read_version_json
+      run: |
+        echo "Reading version from version.json"
+        CURRENT_VERSION=$(jq -r '.current' version.json)
+        echo "Current version in version.json: $CURRENT_VERSION"
+        echo "::set-output name=current_version::$CURRENT_VERSION"
+
+    - name: Compare versions
+      id: compare_versions
+      run: |
+        if [ "${{ steps.extract_version.outputs.version }}" != "${{ steps.read_version_json.outputs.current_version }}" ]; then
+          echo "Versions are different. Updating version.json."
+          sed -i 's/"current": "\(.*\)"/"current": "'${{ steps.extract_version.outputs.version }}'"/' version.json
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add version.json
+          git commit -m "Update version to ${{ steps.extract_version.outputs.version }}"
+          echo "Version updated in version.json. Creating commit."
+          git push
+        else
+          echo "Versions are the same. No update needed."
+        fi
