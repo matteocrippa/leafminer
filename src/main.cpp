@@ -12,6 +12,7 @@
 #include "current.h"
 #include "utils/button.h"
 #include "storage/storage.h"
+#include "network/autoupdate.h"
 #if defined(ESP32)
 #include "freertos/task.h"
 #endif // ESP32
@@ -68,6 +69,8 @@ void setup()
   xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
 #endif
 #endif
+
+  autoupdate();
 
   if (network_getJob() == -1)
   {
