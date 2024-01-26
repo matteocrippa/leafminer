@@ -46,7 +46,13 @@ void autoupdate()
     }
 
     HTTPClient http;
+    #if defined(ESP8266)
+    WiFiClient wificlient;
+    http.begin(wificlient, AUTOUPDATE_URL.c_str());
+    #else
     http.begin(AUTOUPDATE_URL.c_str());
+    #endif
+
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK)
     {
@@ -110,7 +116,11 @@ void autoupdate()
 
                     l_debug(TAG_AUTOUPDATE, "Downloading: %s", downloadUrl.c_str());
 
+                    #if defined(ESP8266)
+                    http.begin(wificlient, downloadUrl.c_str());
+                    #else
                     http.begin(downloadUrl.c_str());
+                    #endif
                     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
                     int httpCode = http.GET();
