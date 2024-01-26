@@ -71,21 +71,50 @@ void autoupdate()
             {
                 l_debug(TAG_AUTOUPDATE, "New Version: %s", version.c_str());
                 cJSON *url = cJSON_GetObjectItemCaseSensitive(json, "link");
-                cJSON *device = cJSON_GetObjectItemCaseSensitive(json, "device");
+                cJSON *device = cJSON_GetObjectItemCaseSensitive(json, "devices");
 
-                if (strcmp(device->valuestring, DEVICE.c_str()) != 0)
+                // Check if the device is supported
+                bool isDeviceSupported = false;
+                for (int i = 0; i < cJSON_GetArraySize(device); i++)
                 {
-                    l_error(TAG_AUTOUPDATE, "Device not supported: %s", device->valuestring);
+                    std::string deviceItem = cJSON_GetStringValue(cJSON_GetArrayItem(device, i));
+                    if (deviceItem == DEVICE)
+                    {
+                        isDeviceSupported = true;
+                        break;
+                    }
+                }
+
+                if (!isDeviceSupported)
+                {
+                    l_error(TAG_AUTOUPDATE, "Device not supported: %s", DEVICE.c_str());
                     return;
                 }
                 else
                 {
-                    l_debug(TAG_AUTOUPDATE, "Device supported: %s", device->valuestring);
-                    l_debug(TAG_AUTOUPDATE, "Downloading: %s", url->valuestring);
+                    l_debug(TAG_AUTOUPDATE, "Device supported: %s", DEVICE.c_str());
 
-                    http.begin(url->valuestring);
+                    // Replace placeholders in the URL with actual values
+                    std::string downloadUrl = url->valuestring;
+                    size_t versionPos = downloadUrl.find("{{version}}");
+                    if (versionPos != std::string::npos)
+                    {
+                        downloadUrl.replace(versionPos, strlen("{{version}}"), version);
+                    }
+
+                    size_t devicePos = downloadUrl.find("{{device}}");
+                    if (devicePos != std::string::npos)
+                    {
+                        downloadUrl.replace(devicePos, strlen("{{device}}"), DEVICE);
+                    }
+
+                    l_debug(TAG_AUTOUPDATE, "Downloading: %s", downloadUrl.c_str());
+
+                    http.begin(downloadUrl.c_str());
+                    http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
+
                     int httpCode = http.GET();
-                    if (httpCode == HTTP_CODE_OK)
+                    if (httpCode >= 200 && httpCode <= 302)
                     {
                         l_debug(TAG_AUTOUPDATE, "Downloaded: %d", http.getSize());
                         if (Update.begin(http.getSize()))
@@ -124,9 +153,7 @@ void autoupdate()
         }
         else
         {
-            // Handle the case where the "version" field is missing or not a string
             l_error(TAG_AUTOUPDATE, "Invalid or missing 'version' field in JSON");
-            // You might want to return or exit the function, depending on your application flow
             return;
         }
     }
