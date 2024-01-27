@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <Updater.h>
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 #else
 #include <WiFi.h>
 #include <Update.h>
@@ -16,7 +17,7 @@
 #include "utils/log.h"
 
 const std::string AUTOUPDATE_URL = "https://raw.githubusercontent.com/matteocrippa/leafminer/main/version.json";
-const char TAG_AUTOUPDATE[] = "autoupdate";
+const char TAG_AUTOUPDATE[] = "AutoUpdate";
 
 #if defined(ESP8266_D)
 std::string DEVICE = "esp8266";
@@ -42,16 +43,18 @@ void autoupdate()
     while (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
         WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
-        delay(800);
+        delay(500);
     }
 
     HTTPClient http;
     #if defined(ESP8266)
-    WiFiClient wificlient;
-    http.begin(wificlient, AUTOUPDATE_URL.c_str());
+    std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
+    client->setInsecure();
+    http.begin(*client, AUTOUPDATE_URL.c_str());
     #else
     http.begin(AUTOUPDATE_URL.c_str());
     #endif
+    http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK)
@@ -117,7 +120,7 @@ void autoupdate()
                     l_debug(TAG_AUTOUPDATE, "Downloading: %s", downloadUrl.c_str());
 
                     #if defined(ESP8266)
-                    http.begin(wificlient, downloadUrl.c_str());
+                    http.begin(*client, downloadUrl.c_str());
                     #else
                     http.begin(downloadUrl.c_str());
                     #endif
