@@ -72,7 +72,8 @@ void screen_loop()
   tft.drawCentreString(shares, TEXT_DIFF_X, TEXT_DIFF_Y, 2);
 
   // session
-  if(current_getSessionId() != nullptr) {
+  if (current_getSessionId() != nullptr)
+  {
     char session[32];
     sprintf(session, "[%s]", current_getSessionId());
     tft.drawCentreString(session, TEXT_SESSION_X, TEXT_SESSION_Y, 2);

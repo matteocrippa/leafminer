@@ -50,7 +50,7 @@ void setup()
     return;
   }
 
-  #if !defined(HAS_LCD)
+#if !defined(HAS_LCD)
   Blink::getInstance().setup();
   delay(500);
   Blink::getInstance().blink(BLINK_START);

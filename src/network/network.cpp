@@ -62,13 +62,15 @@ short isConnected()
         WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
         wifi_attemps++;
         delay(500);
-        if(WiFi.waitForConnectResult() == WL_CONNECTED) {
+        if (WiFi.waitForConnectResult() == WL_CONNECTED)
+        {
             break;
         }
         delay(2000);
     }
 
-    if(WiFi.waitForConnectResult() != WL_CONNECTED) {
+    if (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
         l_error(TAG_NETWORK, "Unable to connect to WiFi");
         return -1;
     }
@@ -81,14 +83,16 @@ short isConnected()
         l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
         client.connect(configuration.pool_url.c_str(), configuration.pool_port);
         delay(500);
-        if(client.connected()) {
+        if (client.connected())
+        {
             break;
-        }   
+        }
         wifi_stratum++;
         delay(2000);
     }
 
-    if(!client.connected()) {
+    if (!client.connected())
+    {
         l_error(TAG_NETWORK, "Unable to connect to host");
         return -1;
     }
@@ -348,7 +352,8 @@ short network_getJob()
 
     isRequestingJob = 1;
 
-    if(isConnected() == -1) {
+    if (isConnected() == -1)
+    {
         return -1;
     }
 

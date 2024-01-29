@@ -47,13 +47,13 @@ void autoupdate()
     }
 
     HTTPClient http;
-    #if defined(ESP8266)
+#if defined(ESP8266)
     std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
     client->setInsecure();
     http.begin(*client, AUTOUPDATE_URL.c_str());
-    #else
+#else
     http.begin(AUTOUPDATE_URL.c_str());
-    #endif
+#endif
     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
     int httpCode = http.GET();
@@ -119,11 +119,11 @@ void autoupdate()
 
                     l_debug(TAG_AUTOUPDATE, "Downloading: %s", downloadUrl.c_str());
 
-                    #if defined(ESP8266)
+#if defined(ESP8266)
                     http.begin(*client, downloadUrl.c_str());
-                    #else
+#else
                     http.begin(downloadUrl.c_str());
-                    #endif
+#endif
                     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
                     int httpCode = http.GET();

@@ -273,8 +273,10 @@ void current_update_hashrate()
     current_hashes_time = millis();
 }
 
-void current_check_stale() {
-    if (millis() - current_last_hash > 60000 * 5) {
+void current_check_stale()
+{
+    if (millis() - current_last_hash > 60000 * 5)
+    {
         l_error(TAG_CURRENT, "No hash received in the last 5 minutes. Restarting...");
         ESP.restart();
     }
@@ -282,10 +284,12 @@ void current_check_stale() {
 
 #if defined(ESP32)
 #define CURRENT_STALE_TIMEOUT 60000 * 2
-void currentTaskFunction(void *pvParameters) {
-  while(1) {
-    current_check_stale();
-    vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
-  }
+void currentTaskFunction(void *pvParameters)
+{
+    while (1)
+    {
+        current_check_stale();
+        vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
+    }
 }
 #endif
