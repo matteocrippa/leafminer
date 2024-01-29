@@ -61,9 +61,9 @@ Job::~Job()
     // No need to manually release resources for std::string members
 }
 
-uint8_t Job::pickaxe(uint8_t *hash, uint32_t &winning_nonce)
+uint8_t Job::pickaxe(uint32_t core, uint8_t *hash, uint32_t &winning_nonce)
 {
-    nextNonce();
+    nextNonce(core);
     winning_nonce = block.nonce;
     uint8_t is_valid = nerd_sha256d(&sha, (unsigned char *)&block + 64, hash);
     return is_valid;
@@ -74,9 +74,9 @@ void Job::setStartNonce(uint32_t start_nonce)
     block.nonce = start_nonce;
 }
 
-void Job::nextNonce()
+void Job::nextNonce(uint32_t core)
 {
-    block.nonce++;
+    block.nonce += (core % 2 == 0) ? 1 : 2;
 }
 
 void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash)

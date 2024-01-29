@@ -32,7 +32,7 @@ void miner(uint32_t core)
 
             current_increment_hashes();
 
-            if (!current_job->pickaxe(hash, winning_nonce))
+            if (!current_job->pickaxe(core, hash, winning_nonce))
             {
                 continue;
             }
