@@ -80,11 +80,10 @@ void screen_loop()
   }
 
   // hashrate
-  float rate = current_get_hashrate();
   int precision = 2;
   int xpos = TEXT_RATE_X;
   int ypos = TEXT_RATE_Y;
-  xpos += tft.drawFloat(rate, precision, xpos, ypos, 6);
+  xpos += tft.drawFloat(current_get_hashrate(), precision, xpos, ypos, 6);
   tft.drawString(" kH/s", xpos, ypos + 20, 4);
 }
 
