@@ -2,6 +2,10 @@
 
 #include <Arduino.h>
 
+#if defined(ESP32)
+#include "freertos/task.h"
+#endif // ESP32
+
 #include "leafminer.h"
 #include "utils/log.h"
 #include "model/configuration.h"
@@ -13,9 +17,6 @@
 #include "utils/button.h"
 #include "storage/storage.h"
 #include "network/autoupdate.h"
-#if defined(ESP32)
-#include "freertos/task.h"
-#endif // ESP32
 #if defined(HAS_LCD)
 #include "screen/screen.h"
 #endif // HAS_LCD
@@ -59,16 +60,32 @@ void setup()
 #endif // HAS_LCD
 
 #if defined(ESP32)
-  xTaskCreatePinnedToCore(currentTaskFunction, "checkStale", 1024, NULL, 4, NULL, 0);
-  xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore0", 12192, (void *)0, 1, NULL, 0);
-#if CORE == 2
-  xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
-#endif // CORE == 2
-  xTaskCreatePinnedToCore(buttonTaskFunction, "buttonTask", 2048, NULL, 4, NULL, 0);
+l_info(TAG_MAIN, "ESP32 - Stale task");
+xTaskCreate(currentTaskFunction, "stale", 2000, NULL, 1, NULL);
+l_info(TAG_MAIN, "ESP32 - Button task");
+xTaskCreate(buttonTaskFunction, "button", 2000, NULL, 2, NULL);
 #if defined(HAS_LCD)
-  xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
+  l_info(TAG_MAIN, "ESP32 - Screen task");
+  xTaskCreate(screenTaskFunction, "screen", 2000, NULL, 3, NULL);
+#endif
+xTaskCreate(mineTaskFunction, "miner0", 14000, (void *)0, 21, NULL);
+#if CORE == 2
+  l_info(TAG_MAIN, "ESP32 - Dual core");
+  xTaskCreate(mineTaskFunction, "miner1", 14000, (void *)1, 20, NULL);
 #endif
 #endif
+
+// #if defined(ESP32)
+//   xTaskCreatePinnedToCore(currentTaskFunction, "stale", 2000, NULL, 1, NULL, 0);
+//   xTaskCreatePinnedToCore(buttonTaskFunction, "button", 2000, NULL, 2, NULL, 0);
+//   xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 14000, (void *)0, 21, NULL, 0);
+// #if CORE == 2
+//   xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 14000, (void *)1, 20, NULL, 1);
+// #endif // CORE == 2
+// #if defined(HAS_LCD)
+//   xTaskCreatePinnedToCore(screenTaskFunction, "screen", 2000, NULL, 3, NULL, 0);
+// #endif
+// #endif
 
   autoupdate();
 
