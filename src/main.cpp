@@ -17,6 +17,7 @@
 #include "utils/button.h"
 #include "storage/storage.h"
 #include "network/autoupdate.h"
+#include "massdeploy.h"
 #if defined(ESP32)
 #include <WiFi.h>
 #include "freertos/task.h"
@@ -54,7 +55,7 @@ void setup()
   {
     #if defined(MASS_WIFI_SSID) && defined(MASS_WIFI_PASS) && defined(MASS_POOL_URL) && defined(MASS_POOL_PASSWORD) && defined(MASS_POOL_PORT)  && defined(MASS_WALLET)
     configuration.wifi_ssid = MASS_WIFI_SSID;
-    configuration.wifi_password = MASS_WIFI
+    configuration.wifi_password = MASS_WIFI_PASS;
     configuration.pool_url = MASS_POOL_URL;
     configuration.pool_password = MASS_POOL_PASSWORD;
     configuration.pool_port = MASS_POOL_PORT;
