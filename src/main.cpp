@@ -84,10 +84,10 @@ void setup()
   l_info(TAG_MAIN, "ESP32 - Screen task");
   xTaskCreate(screenTaskFunction, "screen", 1024, NULL, 3, NULL);
 #endif
-  xTaskCreate(mineTaskFunction, "miner0", 14000, (void *)0, 21, NULL);
+  xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
 #if CORE == 2
   l_info(TAG_MAIN, "ESP32 - Dual core");
-  xTaskCreate(mineTaskFunction, "miner1", 14000, (void *)1, 20, NULL);
+  xTaskCreate(mineTaskFunction, "miner1", 16000, (void *)1, 11, NULL);
 #endif
 #endif
 
