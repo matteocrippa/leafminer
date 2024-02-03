@@ -19,6 +19,7 @@ uint64_t requestJobId = 0;
 uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
+uint8_t isListening = 0;
 extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
@@ -376,6 +377,10 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
+    if(isListening == 1) {
+        return;
+    }
+    isListening = 1;
     int len = 0;
     isConnected();
     do
@@ -391,4 +396,5 @@ void network_listen()
         delay(100);
 #endif
     } while (len > 0);
+    isListening = 0;
 }
