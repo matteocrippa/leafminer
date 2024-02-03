@@ -49,10 +49,20 @@ void setup()
   force_ap = button_setup();
 
   storage_load(&configuration);
+
   if (configuration.wifi_ssid == "" || force_ap)
   {
+    #if defined(MASS_WIFI_SSID) && defined(MASS_WIFI_PASS) && defined(MASS_POOL_URL) && defined(MASS_POOL_PASSWORD) && defined(MASS_POOL_PORT)  && defined(MASS_WALLET)
+    configuration.wifi_ssid = MASS_WIFI_SSID;
+    configuration.wifi_password = MASS_WIFI
+    configuration.pool_url = MASS_POOL_URL;
+    configuration.pool_password = MASS_POOL_PASSWORD;
+    configuration.pool_port = MASS_POOL_PORT;
+    configuration.wallet_address = MASS_WALLET;
+  #else
     accesspoint_setup();
     return;
+#endif // MASS_WIFI_SSID && MASS_WIFI_PASS && MASS_SERVER_DOMAIN && MASS_SERVER_PASSWORD && MASS_WALLET
   }
 
 #if !defined(HAS_LCD)

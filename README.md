@@ -15,6 +15,7 @@ LeafMiner is a Free and Open Source Software (FOSS) ESP(\*) device Bitcoin miner
 - [x] SHA256 Optimization for 64 + 16 structure (aka Midstate)
 - [x] Double Hash Early Exit
 - [x] Support for ESP32 and ESP8266
+- [x] Mass deploy
 
 The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github.com/BitMaker-hub/NerdMiner_v2) by NerdMiner.
 
@@ -103,6 +104,10 @@ If you need to reset the setup flow:
   Unfortunately, you need to erase the flash and reflash, as there's only a physical button for this.
 
 After resetting, rediscover the _LEAFMINER_ WiFi and go through the setup process again.
+
+## Mass Deploy
+
+Starting from version **0.0.6**, we now offer the capability for mass deployment through Platformio. If you need to apply the same configuration to multiple devices, simply modify the `massdeploy.h` file, uncomment the relevant lines, and customize the parameters according to your requirements. This allows you to effortlessly deploy a pre-configured firmware to multiple devices.
 
 ## Donate
 
