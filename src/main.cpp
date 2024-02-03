@@ -14,6 +14,7 @@
 #include "storage/storage.h"
 #include "network/autoupdate.h"
 #if defined(ESP32)
+#include <WiFi.h>
 #include "freertos/task.h"
 #endif // ESP32
 #if defined(HAS_LCD)
@@ -59,12 +60,13 @@ void setup()
 #endif // HAS_LCD
 
 #if defined(ESP32)
+  btStop();
   xTaskCreatePinnedToCore(currentTaskFunction, "checkStale", 1024, NULL, 4, NULL, 0);
+  xTaskCreatePinnedToCore(buttonTaskFunction, "buttonTask", 2048, NULL, 4, NULL, 0);
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore0", 12192, (void *)0, 1, NULL, 0);
 #if CORE == 2
   xTaskCreatePinnedToCore(mineTaskFunction, "mineTaskCore1", 12192, (void *)1, 2, NULL, 1);
 #endif // CORE == 2
-  xTaskCreatePinnedToCore(buttonTaskFunction, "buttonTask", 2048, NULL, 4, NULL, 0);
 #if defined(HAS_LCD)
   xTaskCreatePinnedToCore(screenTaskFunction, "screenTask", 4096, NULL, 3, NULL, 0);
 #endif
