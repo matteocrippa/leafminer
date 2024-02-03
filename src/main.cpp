@@ -17,13 +17,10 @@
 #include "utils/button.h"
 #include "storage/storage.h"
 #include "network/autoupdate.h"
-<<<<<<< HEAD
 #if defined(ESP32)
 #include <WiFi.h>
 #include "freertos/task.h"
 #endif // ESP32
-    =======
->>>>>>> cbae08a0b490bea3dd3ce12e306c6464355b3d63
 #if defined(HAS_LCD)
 #include "screen/screen.h"
 #endif // HAS_LCD
