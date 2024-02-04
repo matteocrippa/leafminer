@@ -15,14 +15,15 @@
 
 #include "nerdSHA256plus.h"
 
-#define ROTR(x, n) ((x >> n) | (x << ((sizeof(x) << 3) - n)))
+inline uint32_t ROTR(uint32_t x, int n) {
+    return ((x >> n) | (x << ((sizeof(x) << 3) - n)));
+}
 
-#define PUT_UINT32_BE(n, b, i)               \
-    {                                        \
-        (b)[(i)] = (uint8_t)((n) >> 24);     \
-        (b)[(i) + 1] = (uint8_t)((n) >> 16); \
-        (b)[(i) + 2] = (uint8_t)((n) >> 8);  \
-        (b)[(i) + 3] = (uint8_t)((n));       \
+inline void PUT_UINT32_BE(uint32_t n, uint8_t *b, int i) {
+        (b)[(i)] = (uint8_t)((n) >> 24);     
+        (b)[(i) + 1] = (uint8_t)((n) >> 16); 
+        (b)[(i) + 2] = (uint8_t)((n) >> 8);  
+        (b)[(i) + 3] = (uint8_t)((n));       
     }
 
 #define GET_UINT32_BE(b, i) \
@@ -335,8 +336,9 @@ RAM_ATTR uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_
     // At this stage we can already figure out how many zeros we have at the end of the hash
     // and we can check if the hash is a valid block hash. This is called early exit optimisation.
     PUT_UINT32_BE(0x5BE0CD19 + A[7], doubleHash, 28);
-    if (doubleHash[31] != 0 || doubleHash[30] != 0)
+    if (doubleHash[31] != 0 || doubleHash[30] != 0) {
         return 0;
+    }
 
     P(A[3], A[4], A[5], A[6], A[7], A[0], A[1], A[2], R(61), K[61]);
     P(A[2], A[3], A[4], A[5], A[6], A[7], A[0], A[1], R(62), K[62]);
