@@ -15,19 +15,23 @@
 
 #include "nerdSHA256plus.h"
 
-inline uint32_t ROTR(uint32_t x, int n) {
+inline uint32_t ROTR(uint32_t x, uint32_t n)
+{
     return ((x >> n) | (x << ((sizeof(x) << 3) - n)));
 }
 
-inline void PUT_UINT32_BE(uint32_t n, uint8_t *b, int i) {
-        (b)[(i)] = (uint8_t)((n) >> 24);     
-        (b)[(i) + 1] = (uint8_t)((n) >> 16); 
-        (b)[(i) + 2] = (uint8_t)((n) >> 8);  
-        (b)[(i) + 3] = (uint8_t)((n));       
-    }
+inline void PUT_UINT32_BE(uint32_t n, uint8_t *b, uint32_t i)
+{
+    (b)[(i)] = (uint8_t)((n) >> 24);
+    (b)[(i) + 1] = (uint8_t)((n) >> 16);
+    (b)[(i) + 2] = (uint8_t)((n) >> 8);
+    (b)[(i) + 3] = (uint8_t)((n));
+}
 
-#define GET_UINT32_BE(b, i) \
-    (((uint32_t)(b)[(i)] << 24) | ((uint32_t)(b)[(i) + 1] << 16) | ((uint32_t)(b)[(i) + 2] << 8) | ((uint32_t)(b)[(i) + 3]))
+inline uint32_t GET_UINT32_BE(const uint8_t *b, uint32_t i)
+{
+    return (((uint32_t)(b)[(i)] << 24) | ((uint32_t)(b)[(i) + 1] << 16) | ((uint32_t)(b)[(i) + 2] << 8) | ((uint32_t)(b)[(i) + 3]));
+}
 
 MEM_ATTR static const uint32_t K[64] = {
     0x428A2F98L, 0x71374491L, 0xB5C0FBCFL, 0xE9B5DBA5L, 0x3956C25BL,
@@ -44,7 +48,10 @@ MEM_ATTR static const uint32_t K[64] = {
     0x682E6FF3L, 0x748F82EEL, 0x78A5636FL, 0x84C87814L, 0x8CC70208L,
     0x90BEFFFAL, 0xA4506CEBL, 0xBEF9A3F7L, 0xC67178F2L};
 
-#define SHR(x, n) ((x & 0xFFFFFFFF) >> n)
+inline uint32_t SHR(uint32_t x, uint32_t n)
+{
+    return ((x & 0xFFFFFFFF) >> n);
+}
 
 #define S0(x) (ROTR(x, 7) ^ ROTR(x, 18) ^ SHR(x, 3))
 #define S1(x) (ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10))
@@ -336,7 +343,8 @@ RAM_ATTR uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_
     // At this stage we can already figure out how many zeros we have at the end of the hash
     // and we can check if the hash is a valid block hash. This is called early exit optimisation.
     PUT_UINT32_BE(0x5BE0CD19 + A[7], doubleHash, 28);
-    if (doubleHash[31] != 0 || doubleHash[30] != 0) {
+    if (doubleHash[31] != 0 || doubleHash[30] != 0)
+    {
         return 0;
     }
 
