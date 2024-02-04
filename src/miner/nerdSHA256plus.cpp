@@ -15,24 +15,6 @@
 
 #include "nerdSHA256plus.h"
 
-inline uint32_t ROTR(uint32_t x, uint32_t n)
-{
-    return ((x >> n) | (x << ((sizeof(x) << 3) - n)));
-}
-
-inline void PUT_UINT32_BE(uint32_t n, uint8_t *b, uint32_t i)
-{
-    (b)[(i)] = (uint8_t)((n) >> 24);
-    (b)[(i) + 1] = (uint8_t)((n) >> 16);
-    (b)[(i) + 2] = (uint8_t)((n) >> 8);
-    (b)[(i) + 3] = (uint8_t)((n));
-}
-
-inline uint32_t GET_UINT32_BE(const uint8_t *b, uint32_t i)
-{
-    return (((uint32_t)(b)[(i)] << 24) | ((uint32_t)(b)[(i) + 1] << 16) | ((uint32_t)(b)[(i) + 2] << 8) | ((uint32_t)(b)[(i) + 3]));
-}
-
 MEM_ATTR static const uint32_t K[64] = {
     0x428A2F98L, 0x71374491L, 0xB5C0FBCFL, 0xE9B5DBA5L, 0x3956C25BL,
     0x59F111F1L, 0x923F82A4L, 0xAB1C5ED5L, 0xD807AA98L, 0x12835B01L,
@@ -48,16 +30,41 @@ MEM_ATTR static const uint32_t K[64] = {
     0x682E6FF3L, 0x748F82EEL, 0x78A5636FL, 0x84C87814L, 0x8CC70208L,
     0x90BEFFFAL, 0xA4506CEBL, 0xBEF9A3F7L, 0xC67178F2L};
 
+inline uint32_t ROTR(uint32_t x, uint32_t n)
+{
+    return ((x >> n) | (x << ((sizeof(x) << 3) - n)));
+}
+inline void PUT_UINT32_BE(uint32_t n, uint8_t *b, uint32_t i)
+{
+    (b)[(i)] = (uint8_t)((n) >> 24);
+    (b)[(i) + 1] = (uint8_t)((n) >> 16);
+    (b)[(i) + 2] = (uint8_t)((n) >> 8);
+    (b)[(i) + 3] = (uint8_t)((n));
+}
+inline uint32_t GET_UINT32_BE(const uint8_t *b, uint32_t i)
+{
+    return (((uint32_t)(b)[(i)] << 24) | ((uint32_t)(b)[(i) + 1] << 16) | ((uint32_t)(b)[(i) + 2] << 8) | ((uint32_t)(b)[(i) + 3]));
+}
 inline uint32_t SHR(uint32_t x, uint32_t n)
 {
     return ((x & 0xFFFFFFFF) >> n);
 }
-
-#define S0(x) (ROTR(x, 7) ^ ROTR(x, 18) ^ SHR(x, 3))
-#define S1(x) (ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10))
-
-#define S2(x) (ROTR(x, 2) ^ ROTR(x, 13) ^ ROTR(x, 22))
-#define S3(x) (ROTR(x, 6) ^ ROTR(x, 11) ^ ROTR(x, 25))
+inline uint32_t S0(uint32_t x)
+{
+    return (ROTR(x, 7) ^ ROTR(x, 18) ^ SHR(x, 3));
+}
+inline uint32_t S1(uint32_t x)
+{
+    return (ROTR(x, 17) ^ ROTR(x, 19) ^ SHR(x, 10));
+}
+inline uint32_t S2(uint32_t x)
+{
+    return (ROTR(x, 2) ^ ROTR(x, 13) ^ ROTR(x, 22));
+}
+inline uint32_t S3(uint32_t x)
+{
+    return (ROTR(x, 6) ^ ROTR(x, 11) ^ ROTR(x, 25));
+}
 
 #define F0(x, y, z) ((x & y) | (z & (x | y)))
 #define F1(x, y, z) (z ^ (x & (y ^ z)))
