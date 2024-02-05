@@ -377,7 +377,8 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
-    if(isListening == 1) {
+    if (isListening == 1)
+    {
         return;
     }
     isListening = 1;

@@ -15,12 +15,12 @@ Blink::Blink()
 
 void Blink::setup()
 {
-    if (configuration.blink_enabled == "on")
-    {
-        l_info(TAG_BLINK, "Setup");
-        pinMode(LED_BUILTIN, OUTPUT);
-        analogWrite(LED_BUILTIN, configuration.blink_brightness);
-    }
+  if (configuration.blink_enabled == "on")
+  {
+    l_info(TAG_BLINK, "Setup");
+    pinMode(LED_BUILTIN, OUTPUT);
+    analogWrite(LED_BUILTIN, configuration.blink_brightness);
+  }
 }
 
 void Blink::blink(int number)

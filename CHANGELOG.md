@@ -1,4 +1,5 @@
 # v0.0.6
+
 - Nonce increment
 - Linted code
 - Updated ESP32 dependecy
