@@ -1,5 +1,5 @@
 {
-  "current": "0.0.5",
+  "current": "0.0.6",
   "link": "https://github.com/matteocrippa/leafminer/releases/download/v{{version}}/firmware_{{device}}.bin",
   "devices": [
     "esp8266",
