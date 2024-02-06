@@ -1,8 +1,5 @@
 #include <Arduino.h>
 #include <climits>
-#if defined(ESP32)
-#include <freertos/semphr.h>
-#endif
 #include "current.h"
 #include "utils/log.h"
 
