@@ -18,7 +18,6 @@ void miner(uint32_t core)
 
     while (1)
     {
-
         if (current_job_is_valid == 0)
         {
             return;
@@ -40,9 +39,9 @@ void miner(uint32_t core)
         {
             break;
         }
-    }
 
-    current_update_hashrate();
+        current_update_hashrate();
+    }
 
 #if defined(ESP32)
     l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
