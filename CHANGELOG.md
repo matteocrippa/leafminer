@@ -6,5 +6,4 @@
 - Rework task handling
 - Aligned logging system level to ESP ones
 - Easy mass deployment via USB
-
 - Improve hashrate visualization

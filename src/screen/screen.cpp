@@ -96,8 +96,6 @@ void screen_loop()
   int xpos = TEXT_RATE_X;
   xpos += tft.drawFloat(current_get_hashrate(), precision, xpos, TEXT_RATE_Y, 6);
   tft.drawString(" kH/s", xpos, TEXT_RATE_Y + 20, 4);
-
-  tft.flush();
 }
 
 void screen_toggle()
