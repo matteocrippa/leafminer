@@ -103,7 +103,7 @@ void autoupdate()
         {
             std::string version = cJSON_GetStringValue(versionItem);
             // Now you can safely use the 'version' string
-            l_debug(TAG_AUTOUPDATE, "Version: %s", version.c_str());
+            l_debug(TAG_AUTOUPDATE, "Remote Version: %s", version.c_str());
             int comparision = compareVersions(version.c_str(), _VERSION);
             if (comparision <= 0)
             {
