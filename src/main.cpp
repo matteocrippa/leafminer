@@ -34,7 +34,7 @@ void setup()
 {
   Serial.begin(115200);
   delay(1000);
-  l_debug(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
+  l_info(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
 #if defined(ESP8266)
   l_info(TAG_MAIN, "ESP8266 - Disable WDT");

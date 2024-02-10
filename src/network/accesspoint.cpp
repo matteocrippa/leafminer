@@ -98,7 +98,7 @@ void accesspoint_webserver()
             {
                 if (Update.end(true))
                 {
-                    l_debug(TAG_AP, "Update success. Please manually reboot...");
+                    l_info(TAG_AP, "Update success. Please manually reboot...");
                     delay(1000);
                     ESP.restart();
                 }
@@ -129,7 +129,7 @@ void accesspoint_webserver()
                       { request->redirect("/"); });
 
     server.begin();
-    l_debug(TAG_AP, "Webserver Started");
+    l_info(TAG_AP, "Webserver Started");
 }
 
 void accesspoint_setup()

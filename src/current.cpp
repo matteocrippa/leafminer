@@ -80,12 +80,12 @@ void current_setJob(const Notification &notification)
     if (current_job_is_valid == 1)
     {
         current_job_next = new Job(notification, *current_subscribe, current_difficulty);
-        l_debug(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
+        l_info(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
         return;
     }
     current_job = new Job(notification, *current_subscribe, current_difficulty);
     current_job_is_valid = 1;
-    l_debug(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
+    l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
     current_increment_processedJob();
 }
 
@@ -214,7 +214,7 @@ void current_setHighestDifficulty(double difficulty)
     if (difficulty > current_difficulty_highest)
     {
         current_difficulty_highest = difficulty;
-        l_debug(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
+        l_info(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
     }
 }
 
