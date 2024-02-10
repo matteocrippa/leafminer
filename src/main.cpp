@@ -82,7 +82,7 @@ void setup()
   xTaskCreate(buttonTaskFunction, "button", 1024, NULL, 2, NULL);
 #if defined(HAS_LCD)
   l_info(TAG_MAIN, "ESP32 - Screen task");
-  xTaskCreate(screenTaskFunction, "screen", 1024, NULL, 3, NULL);
+  xTaskCreate(screenTaskFunction, "screen", 2048, NULL, 3, NULL);
 #endif
   xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
 #if CORE == 2
