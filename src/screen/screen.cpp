@@ -7,12 +7,30 @@
 #include "lilygo-t-s3-include.h"
 #include "geekmagicclock-smalltv-include.h"
 
-#define SCREEN_REFRESH 3000
+#define SCREEN_REFRESH 2000
 
 TFT_eSPI tft = TFT_eSPI();
 bool screen_enabled = true;
 char TAG_SCREEN[] = "Screen";
 extern Configuration configuration;
+
+void screen_on()
+{
+  tft.writecommand(TFT_DISPON);
+#if defined(LILYGO_T_S3)
+  digitalWrite(38, HIGH);
+#endif
+}
+
+void screen_off()
+{
+  tft.writecommand(TFT_DISPOFF);
+  // add backlight handling for Lilygo T-S3
+  // https://github.com/Bodmer/TFT_eSPI/discussions/2328
+#if defined(LILYGO_T_S3)
+  digitalWrite(38, LOW);
+#endif
+}
 
 void screen_setup()
 {
@@ -20,17 +38,13 @@ void screen_setup()
   tft.setRotation(ROTATION);
   tft.setSwapBytes(true);
   tft.pushImage(0, 0, WIDTH, HEIGHT, splash);
+  tft.setTextColor(TFT_WHITE, TFT_WHITE);
   delay(1500);
 
   if (configuration.lcd_on_start == "off")
   {
     screen_enabled = false;
-    tft.writecommand(TFT_DISPOFF);
-  }
-  else
-  {
-    screen_enabled = true;
-    tft.writecommand(TFT_DISPON);
+    screen_off();
   }
 }
 
@@ -44,8 +58,6 @@ void screen_loop()
 
   // background
   tft.pushImage(0, 0, WIDTH, HEIGHT, home);
-
-  tft.setTextColor(TFT_WHITE, TFT_WHITE);
 
   // version
   char leafMiner[20];
@@ -72,41 +84,29 @@ void screen_loop()
   tft.drawCentreString(shares, TEXT_DIFF_X, TEXT_DIFF_Y, 2);
 
   // session
-  if(current_getSessionId() != nullptr) {
+  if (current_getSessionId() != nullptr)
+  {
     char session[32];
     sprintf(session, "[%s]", current_getSessionId());
     tft.drawCentreString(session, TEXT_SESSION_X, TEXT_SESSION_Y, 2);
   }
 
   // hashrate
-  float rate = current_get_hashrate();
   int precision = 2;
   int xpos = TEXT_RATE_X;
-  int ypos = TEXT_RATE_Y;
-  xpos += tft.drawFloat(rate, precision, xpos, ypos, 6);
-  tft.drawString(" kH/s", xpos, ypos + 20, 4);
+  xpos += tft.drawFloat(current_get_hashrate(), precision, xpos, TEXT_RATE_Y, 6);
+  tft.drawString(" kH/s", xpos, TEXT_RATE_Y + 20, 4);
 }
 
 void screen_toggle()
 {
   screen_enabled = !screen_enabled;
-  tft.writecommand(screen_enabled ? TFT_DISPON : TFT_DISPOFF);
-// add backlight handling for Lilygo T-S3
-// https://github.com/Bodmer/TFT_eSPI/discussions/2328
-#if defined(LILYGO_T_S3)
-  digitalWrite(38, screen_enabled ? HIGH : LOW);
-#endif
-}
-
-#if defined(ESP32)
-#if defined(HAS_LCD)
-void screenTaskFunction(void *pvParameters)
-{
-  while (1)
+  if (screen_enabled)
   {
-    screen_loop();
-    vTaskDelay(SCREEN_REFRESH / portTICK_PERIOD_MS);
+    screen_on();
+  }
+  else
+  {
+    screen_off();
   }
 }
-#endif
-#endif

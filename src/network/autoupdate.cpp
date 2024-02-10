@@ -37,6 +37,39 @@ std::string DEVICE = "unknown";
 
 extern Configuration configuration;
 
+// Function to compare two version strings
+// Returns:
+//  1 if version1 is newer
+//  0 if both versions are equal
+// -1 if version2 is newer
+int compareVersions(const char* version1, const char* version2) {
+    int major1, minor1, patch1;
+    int major2, minor2, patch2;
+
+    sscanf(version1, "%d.%d.%d", &major1, &minor1, &patch1);
+    sscanf(version2, "%d.%d.%d", &major2, &minor2, &patch2);
+
+    if (major1 > major2) {
+        return 1;
+    } else if (major1 < major2) {
+        return -1;
+    } else {
+        if (minor1 > minor2) {
+            return 1;
+        } else if (minor1 < minor2) {
+            return -1;
+        } else {
+            if (patch1 > patch2) {
+                return 1;
+            } else if (patch1 < patch2) {
+                return -1;
+            } else {
+                return 0; // Versions are equal
+            }
+        }
+    }
+}
+
 void autoupdate()
 {
     l_info(TAG_AUTOUPDATE, "Connecting to %s...", configuration.wifi_ssid.c_str());
@@ -47,13 +80,13 @@ void autoupdate()
     }
 
     HTTPClient http;
-    #if defined(ESP8266)
+#if defined(ESP8266)
     std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
     client->setInsecure();
     http.begin(*client, AUTOUPDATE_URL.c_str());
-    #else
+#else
     http.begin(AUTOUPDATE_URL.c_str());
-    #endif
+#endif
     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
     int httpCode = http.GET();
@@ -70,8 +103,9 @@ void autoupdate()
         {
             std::string version = cJSON_GetStringValue(versionItem);
             // Now you can safely use the 'version' string
-            l_debug(TAG_AUTOUPDATE, "Version: %s", version.c_str());
-            if (strcmp(version.c_str(), _VERSION) == 0)
+            l_debug(TAG_AUTOUPDATE, "Remote Version: %s", version.c_str());
+            int comparision = compareVersions(version.c_str(), _VERSION);
+            if (comparision <= 0)
             {
                 l_debug(TAG_AUTOUPDATE, "No Updates, Version: %s", version.c_str());
                 return;
@@ -119,11 +153,12 @@ void autoupdate()
 
                     l_debug(TAG_AUTOUPDATE, "Downloading: %s", downloadUrl.c_str());
 
-                    #if defined(ESP8266)
+#if defined(ESP8266)
                     http.begin(*client, downloadUrl.c_str());
-                    #else
+#else
                     http.begin(downloadUrl.c_str());
-                    #endif
+#endif
+
                     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
                     int httpCode = http.GET();

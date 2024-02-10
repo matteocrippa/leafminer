@@ -1,12 +1,12 @@
 {
-    "current": "0.0.5",
-    "link": "https://github.com/matteocrippa/leafminer/releases/download/v{{version}}/firmware_{{device}}.bin",
-    "devices": [
-        "esp8266",
-        "esp32",
-        "esp32-s2",
-        "esp32-s3",
-        "geekmagic-smalltv",
-        "lilygo-t-display-s3"
-    ]
+  "current": "0.0.6",
+  "link": "https://github.com/matteocrippa/leafminer/releases/download/v{{version}}/firmware_{{device}}.bin",
+  "devices": [
+    "esp8266",
+    "esp32",
+    "esp32-s2",
+    "esp32-s3",
+    "geekmagic-smalltv",
+    "lilygo-t-display-s3"
+  ]
 }

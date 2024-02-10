@@ -9,9 +9,9 @@
  * @param message The message to be logged.
  * @param ... Additional arguments (optional) to be formatted into the message using printf-style formatting.
  */
-RAM_ATTR void l_info(const char *TAG, PGM_P message, ...)
+void l_info(const char *TAG, PGM_P message, ...)
 {
-#if LOG_LEVEL == 0
+#if LOG_LEVEL >= 2
   Serial.print("[I] ");
   Serial.print(TAG);
   Serial.print(": ");
@@ -38,9 +38,9 @@ RAM_ATTR void l_info(const char *TAG, PGM_P message, ...)
  * @param message The error message to be logged.
  * @param ... Additional arguments for formatting the error message.
  */
-RAM_ATTR void l_error(const char *TAG, PGM_P message, ...)
+void l_error(const char *TAG, PGM_P message, ...)
 {
-#if LOG_LEVEL <= 2
+#if LOG_LEVEL >= 1
   Serial.print("[E] ");
   Serial.print(TAG);
   Serial.print(": ");
@@ -68,9 +68,9 @@ RAM_ATTR void l_error(const char *TAG, PGM_P message, ...)
  * @param message The log message format string.
  * @param ... Additional arguments to be formatted into the log message.
  */
-RAM_ATTR void l_debug(const char *TAG, PGM_P message, ...)
+void l_debug(const char *TAG, PGM_P message, ...)
 {
-#if LOG_LEVEL <= 1
+#if LOG_LEVEL >= 3
   Serial.print("[D] ");
   Serial.print(TAG);
   Serial.print(": ");

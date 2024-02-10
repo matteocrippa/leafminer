@@ -21,7 +21,6 @@ void current_setDifficulty(double difficulty);
 const double current_getDifficulty();
 void current_increment_block_found();
 const uint32_t current_get_block_found();
-void current_set_hashrate(const uint64_t &time, const uint64_t &hashes);
 const double current_get_hashrate();
 void current_setHighestDifficulty(double difficulty);
 const double current_getHighestDifficulty();

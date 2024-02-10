@@ -30,13 +30,13 @@ public:
     // Destructor
     ~Job();
 
-    uint8_t pickaxe(uint8_t *hash, uint32_t &winning_nonce);
+    uint8_t pickaxe(uint32_t core, uint8_t *hash, uint32_t &winning_nonce);
 
     void setStartNonce(uint32_t start_nonce);
 
 private:
     // Private member functions
-    void nextNonce();
+    void nextNonce(uint32_t core);
     void generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash);
     void calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root);
     std::string generate_extra_nonce2(int extranonce2_size);

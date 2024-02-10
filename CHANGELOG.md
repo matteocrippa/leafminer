@@ -1,8 +1,10 @@
-# v0.0.5
-- Fix ESP8266 stale crash
-- Fix unit tests
-- Add screen status handler on start
-- Add Github action to check version
-- Add version.json file
-- Add device value in platform
-- Add auto OTA update check on start
+# v0.0.6
+
+- Nonce increment
+- Linted code
+- Updated ESP32 dependecy
+- Rework task handling
+- Aligned logging system level to ESP ones
+- Easy mass deployment via USB
+- Improve hashrate visualization
+- Add version check

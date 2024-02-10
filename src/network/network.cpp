@@ -19,6 +19,7 @@ uint64_t requestJobId = 0;
 uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
+uint8_t isListening = 0;
 extern Configuration configuration;
 
 #define NETWORK_BUFFER_SIZE 2048
@@ -62,13 +63,15 @@ short isConnected()
         WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
         wifi_attemps++;
         delay(500);
-        if(WiFi.waitForConnectResult() == WL_CONNECTED) {
+        if (WiFi.waitForConnectResult() == WL_CONNECTED)
+        {
             break;
         }
         delay(2000);
     }
 
-    if(WiFi.waitForConnectResult() != WL_CONNECTED) {
+    if (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
         l_error(TAG_NETWORK, "Unable to connect to WiFi");
         return -1;
     }
@@ -81,14 +84,16 @@ short isConnected()
         l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
         client.connect(configuration.pool_url.c_str(), configuration.pool_port);
         delay(500);
-        if(client.connected()) {
+        if (client.connected())
+        {
             break;
-        }   
+        }
         wifi_stratum++;
         delay(2000);
     }
 
-    if(!client.connected()) {
+    if (!client.connected())
+    {
         l_error(TAG_NETWORK, "Unable to connect to host");
         return -1;
     }
@@ -348,7 +353,8 @@ short network_getJob()
 
     isRequestingJob = 1;
 
-    if(isConnected() == -1) {
+    if (isConnected() == -1)
+    {
         return -1;
     }
 
@@ -371,6 +377,11 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
+    if (isListening == 1)
+    {
+        return;
+    }
+    isListening = 1;
     int len = 0;
     isConnected();
     do
@@ -386,4 +397,5 @@ void network_listen()
         delay(100);
 #endif
     } while (len > 0);
+    isListening = 0;
 }

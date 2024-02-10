@@ -4,7 +4,7 @@
 
 The following versions of LeafMiner are currently supported with security updates:
 
-- 0.0.1
+- 0.0.6
 
 ## Reporting a Vulnerability
 

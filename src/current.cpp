@@ -1,10 +1,8 @@
 #include <Arduino.h>
 #include <climits>
-#if defined(ESP32)
-#include <freertos/semphr.h>
-#endif
 #include "current.h"
 #include "utils/log.h"
+#include "screen/screen.h"
 
 char TAG_CURRENT[8] = "Current";
 
@@ -82,12 +80,12 @@ void current_setJob(const Notification &notification)
     if (current_job_is_valid == 1)
     {
         current_job_next = new Job(notification, *current_subscribe, current_difficulty);
-        l_debug(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
+        l_info(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
         return;
     }
     current_job = new Job(notification, *current_subscribe, current_difficulty);
     current_job_is_valid = 1;
-    l_debug(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
+    l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
     current_increment_processedJob();
 }
 
@@ -216,7 +214,7 @@ void current_setHighestDifficulty(double difficulty)
     if (difficulty > current_difficulty_highest)
     {
         current_difficulty_highest = difficulty;
-        l_debug(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
+        l_info(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
     }
 }
 
@@ -232,6 +230,9 @@ const double current_getHighestDifficulty()
     return current_difficulty_highest;
 }
 
+/**
+ * Increments the current hash accepted count and updates the last hash timestamp.
+ */
 void current_increment_hash_accepted()
 {
     current_hash_accepted++;
@@ -239,11 +240,21 @@ void current_increment_hash_accepted()
     l_info(TAG_CURRENT, "Hash accepted: %d", current_hash_accepted);
 }
 
+/**
+ * @brief Retrieves the accepted hash value.
+ *
+ * This function returns the accepted hash value.
+ *
+ * @return The accepted hash value.
+ */
 const uint32_t current_get_hash_accepted()
 {
     return current_hash_accepted;
 }
 
+/**
+ * Increments the count of rejected hashes and updates the timestamp of the last rejected hash.
+ */
 void current_increment_hash_rejected()
 {
     current_hash_rejected++;
@@ -251,11 +262,19 @@ void current_increment_hash_rejected()
     l_info(TAG_CURRENT, "Hash rejected: %d", current_hash_rejected);
 }
 
+/**
+ * @brief Retrieves the hash value for rejected current.
+ *
+ * @return The hash value for rejected current.
+ */
 const uint32_t current_get_hash_rejected()
 {
     return current_hash_rejected;
 }
 
+/**
+ * Increments the current hashes count and updates the current hashes time if it is zero.
+ */
 void current_increment_hashes()
 {
     if (current_hashes_time == 0)
@@ -265,16 +284,31 @@ void current_increment_hashes()
     current_hashes++;
 }
 
+/**
+ * Updates the current hashrate based on the number of hashes performed and the time elapsed.
+ * The current hashrate is calculated in kilohashes per second (KH/s).
+ */
 void current_update_hashrate()
-{
-    current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
-    l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
-    current_hashes = 0;
-    current_hashes_time = millis();
+{   
+    if(millis() - current_hashes_time > 1000) {
+        current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
+        l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+        #if defined(HAS_LCD)
+        screen_loop();
+        #endif
+        current_hashes = 0;
+        current_hashes_time = millis();
+    }
 }
 
-void current_check_stale() {
-    if (millis() - current_last_hash > 60000 * 5) {
+/**
+ * Checks if the current hash has not been received in the last 5 minutes.
+ * If the hash is stale, it logs an error message and restarts the ESP.
+ */
+void current_check_stale()
+{
+    if (millis() - current_last_hash > 60000 * 5)
+    {
         l_error(TAG_CURRENT, "No hash received in the last 5 minutes. Restarting...");
         ESP.restart();
     }
@@ -282,10 +316,12 @@ void current_check_stale() {
 
 #if defined(ESP32)
 #define CURRENT_STALE_TIMEOUT 60000 * 2
-void currentTaskFunction(void *pvParameters) {
-  while(1) {
-    current_check_stale();
-    vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
-  }
+void currentTaskFunction(void *pvParameters)
+{
+    while (1)
+    {
+        current_check_stale();
+        vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
+    }
 }
 #endif
