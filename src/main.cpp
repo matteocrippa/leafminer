@@ -74,23 +74,6 @@ void setup()
   screen_setup();
 #endif // HAS_LCD
 
-#if defined(ESP32)
-  btStop();
-  l_info(TAG_MAIN, "ESP32 - Stale task");
-  xTaskCreate(currentTaskFunction, "stale", 1024, NULL, 1, NULL);
-  l_info(TAG_MAIN, "ESP32 - Button task");
-  xTaskCreate(buttonTaskFunction, "button", 1024, NULL, 2, NULL);
-#if defined(HAS_LCD)
-  l_info(TAG_MAIN, "ESP32 - Screen task");
-  xTaskCreate(screenTaskFunction, "screen", 2048, NULL, 3, NULL);
-#endif
-  xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
-#if CORE == 2
-  l_info(TAG_MAIN, "ESP32 - Dual core");
-  xTaskCreate(mineTaskFunction, "miner1", 16000, (void *)1, 11, NULL);
-#endif
-#endif
-
   autoupdate();
 
   if (network_getJob() == -1)
@@ -101,6 +84,17 @@ void setup()
     accesspoint_setup();
     return;
   }
+
+#if defined(ESP32)
+  btStop();
+  xTaskCreate(currentTaskFunction, "stale", 1024, NULL, 1, NULL);
+  xTaskCreate(buttonTaskFunction, "button", 1024, NULL, 2, NULL);
+  xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
+#if CORE == 2
+  xTaskCreate(mineTaskFunction, "miner1", 16000, (void *)1, 11, NULL);
+#endif
+#endif
+
   network_listen();
 }
 

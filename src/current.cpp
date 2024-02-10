@@ -2,6 +2,7 @@
 #include <climits>
 #include "current.h"
 #include "utils/log.h"
+#include "screen/screen.h"
 
 char TAG_CURRENT[8] = "Current";
 
@@ -292,6 +293,9 @@ void current_update_hashrate()
     if(millis() - current_hashes_time > 1000) {
         current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
         l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+        #if defined(HAS_LCD)
+        screen_loop();
+        #endif
         current_hashes = 0;
         current_hashes_time = millis();
     }
