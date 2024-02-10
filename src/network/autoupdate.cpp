@@ -158,6 +158,7 @@ void autoupdate()
 #else
                     http.begin(downloadUrl.c_str());
 #endif
+
                     http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
 
                     int httpCode = http.GET();
