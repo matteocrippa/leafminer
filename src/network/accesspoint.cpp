@@ -72,7 +72,7 @@ void accesspoint_webserver()
         request->send(200, "text/html", html); });
 
     server.on("/ota", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->send(200, "text/html", String(html_ota.c_str())); });
+              { request->send(200, "text/html", String(html_ota)); });
 
     server.on(
         "/upload", HTTP_POST, [](AsyncWebServerRequest *request)
