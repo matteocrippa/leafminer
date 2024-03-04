@@ -1,6 +1,6 @@
 #pragma once
 
-#define _VERSION "0.0.6"
+#define _VERSION "0.1.0"
 #define DIFFICULTY 1e-4
 
 // Mining

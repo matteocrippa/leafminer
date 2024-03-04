@@ -16,11 +16,12 @@
 #include "dhcpserver/dhcpserver.h"
 
 #define TAG_AP "AccessPoint"
-#define AP_SSID "LEAFMINER"
+#define AP_SSID "LEAFMINER-SETUP"
 #define AP_DNS_PORT 53
 #define AP_HTML_MAX_SIZE 1000
 
 httpd_handle_t server = NULL;
+static esp_netif_t *sta_netif = NULL;
 
 extern Configuration configuration;
 
@@ -143,10 +144,10 @@ void accesspoint_webserver(const Configuration *configuration)
 
     // httpd_uri_t notfound_uri = {
     //     .uri = "/*",
-    //     .method = HTTP_ANY,
+    //     .method = ,
     //     .handler = [](httpd_req_t *req)
     //     {
-    //         httpd_resp_send(req, "", 0);
+    //         httpd_resp_redirect(req, "/", HTTPD_301);
     //         return ESP_OK;
     //     }};
 
@@ -163,6 +164,7 @@ void accesspoint_setup()
 
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
+    sta_netif = esp_netif_create_default_wifi_ap();
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
@@ -175,10 +177,6 @@ void accesspoint_setup()
             .max_connection = 1,
         },
     };
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap_config));
-
-    ESP_ERROR_CHECK(esp_wifi_start());
 
     ESP_ERROR_CHECK(mdns_init());
     ESP_ERROR_CHECK(mdns_hostname_set("leafminer"));
@@ -190,68 +188,21 @@ void accesspoint_setup()
     dns.ip.u_addr.ip4.addr = ESP_IP4TOADDR(192, 168, 4, 1);
     dns.ip.type = IPADDR_TYPE_V4;
     dhcps_offer_t dhcps_dns_value = OFFER_DNS;
-    ESP_ERROR_CHECK(esp_netif_dhcps_option(netif, ESP_NETIF_OP_SET, ESP_NETIF_DOMAIN_NAME_SERVER, &dhcps_dns_value, sizeof(dhcps_dns_value)));
-    ESP_ERROR_CHECK(esp_netif_set_dns_info(netif, ESP_NETIF_DNS_MAIN, &dns));
-    ESP_ERROR_CHECK(esp_netif_dhcps_start(netif));
+    ESP_ERROR_CHECK(esp_netif_dhcps_stop(sta_netif));
+    ESP_ERROR_CHECK(esp_netif_dhcps_option(sta_netif, ESP_NETIF_OP_SET, ESP_NETIF_DOMAIN_NAME_SERVER, &dhcps_dns_value, sizeof(dhcps_dns_value)));
+    ESP_ERROR_CHECK(esp_netif_set_dns_info(sta_netif, ESP_NETIF_DNS_MAIN, &dns));
+    ESP_ERROR_CHECK(esp_netif_dhcps_start(sta_netif));
 
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     ESP_ERROR_CHECK(httpd_start(&server, &config));
     accesspoint_webserver(&configuration);
+
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
 }
-
-// #define AP_IP_ADDR "192.168.4.1"
-// #define AP_SUBNET_MASK "255.255.255.0"
-// #define AP_DNS_ADDR "192.168.4.1"
-
-// void wifi_init_softap()
-// {
-//     ESP_ERROR_CHECK(esp_netif_init());
-//     ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-//     // Create default event loop
-//     esp_netif_create_default_wifi_ap();
-
-//     // Initialize Wi-Fi config
-//     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-//     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-
-//     // Set static IP configuration
-//     esp_netif_ip_info_t ip_info;
-//     memset(&ip_info, 0, sizeof(esp_netif_ip_info_t));
-//     IP4_ADDR(&ip_info.ip, 192, 168, 4, 1);
-//     IP4_ADDR(&ip_info.gw, 192, 168, 4, 1);
-//     IP4_ADDR(&ip_info.netmask, 255, 255, 255, 0);
-//     ESP_ERROR_CHECK(esp_netif_dhcps_stop(TCPIP_ADAPTER_IF_AP));
-//     ESP_ERROR_CHECK(esp_netif_set_ip_info(TCPIP_ADAPTER_IF_AP, &ip_info));
-//     ESP_ERROR_CHECK(esp_netif_dhcps_start(TCPIP_ADAPTER_IF_AP));
-
-//     // Set DNS server configuration
-//     dns_server_t dns;
-//     IP_ADDR4(&dns.ip, 192, 168, 4, 1);
-//     ESP_ERROR_CHECK(esp_netif_dns_info_set(TCPIP_ADAPTER_IF_AP, ESP_NETIF_DNS_MAIN, &dns));
-
-//     // Set Wi-Fi mode to AP
-//     wifi_config_t wifi_config = {
-//         .ap = {
-//             .ssid = AP_SSID,
-//             .ssid_len = strlen(AP_SSID),
-//             .channel = 0,
-//             .max_connection = 1,
-//             .authmode = WIFI_AUTH_WPA_WPA2_PSK,
-//             .beacon_interval = 100},
-//     };
-//     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-//     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config));
-
-//     // Start Wi-Fi
-//     ESP_ERROR_CHECK(esp_wifi_start());
-
-//     // Register Wi-Fi event handler
-//     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-//     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL));
-// }
 
 void accesspoint_loop()
 {
-    vTaskDelay(100 / portTICK_PERIOD_MS);
+    // vTaskDelay(100 / portTICK_PERIOD_MS);
 }

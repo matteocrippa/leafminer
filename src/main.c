@@ -5,7 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "nvs_flash.h"
-#include "esp_wifi.h" // Assuming ESP-IDF's Wi-Fi library is named wifi.h
+#include "esp_wifi.h"
 #include "storage.h" // You need to define storage functions according to your requirements
 // #include "utils/button.h" // You need to define button functions according to your requirements
 // #include "network/autoupdate.h" // You need to define autoupdate functions according to your requirements
@@ -20,6 +20,7 @@
 #define TAG_MAIN "Main"
 
 Configuration configuration;
+bool force_ap = false;
 
 void setup()
 {
@@ -29,9 +30,6 @@ void setup()
     // Initialize serial communication for debugging
     ESP_LOGI(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
 
-    // Disable Watchdog Timer
-    esp_task_wdt_init(0);
-    
     // Load configuration from storage
     storage_load(&configuration);
 
@@ -43,16 +41,15 @@ void setup()
     {
         // Assuming you have accesspoint_setup function defined
         accesspoint_setup();
+        accesspoint_loop();
+        // xTaskCreate(&accesspoint_loop, "accessPoint", 4096, NULL, 5, NULL);
         return;
     }
 
-    // // Setup peripherals
-    // setup_peripherals();
-
-    // // Perform autoupdate
+    // Perform autoupdate
     // autoupdate();
 
-    // // Connect to network
+    // Connect to network
     // if (network_getJob() == -1)
     // {
     //     ESP_LOGE(TAG_MAIN, "Failed to connect to network");
@@ -82,5 +79,15 @@ void loop()
 void app_main()
 {
     setup();
-    // xTaskCreate(&loop, "loopTask", 4096, NULL, 5, NULL);
+
+    // #if defined(ESP32)
+    //     xTaskCreate(currentTaskFunction, "stale", 1024, NULL, 1, NULL);
+    //     xTaskCreate(buttonTaskFunction, "button", 1024, NULL, 2, NULL);
+    //     xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
+    // #if CORE == 2
+    //     xTaskCreate(mineTaskFunction, "miner1", 16000, (void *)1, 11, NULL);
+    // #endif
+    // #endif
+
+    //     network_listen();
 }
