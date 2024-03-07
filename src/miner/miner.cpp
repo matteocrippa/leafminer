@@ -43,17 +43,12 @@ void miner(uint32_t core)
         current_update_hashrate();
     }
 
-#if defined(ESP32)
-    l_info(TAG_MINER, "[%d] > Heap / Free heap / Min free heap: %d / %d / %d", core, ESP.getHeapSize(), ESP.getFreeHeap(), ESP.getMinFreeHeap());
-#else
 #if defined(HAS_LCD)
     screen_loop();
 #endif // HAS_LCD
-#endif
 
     l_info(TAG_MINER, "[%d] > [%s] > 0x%.8x - diff %.12f", core, current_job->job_id.c_str(), winning_nonce, diff_hash);
     network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
-    network_listen();
 
     current_setHighestDifficulty(diff_hash);
 

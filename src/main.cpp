@@ -18,10 +18,6 @@
 #include "storage/storage.h"
 #include "network/autoupdate.h"
 #include "massdeploy.h"
-#if defined(ESP32)
-#include <WiFi.h>
-#include "freertos/task.h"
-#endif // ESP32
 #if defined(HAS_LCD)
 #include "screen/screen.h"
 #endif // HAS_LCD

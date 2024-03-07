@@ -48,7 +48,6 @@ uint64_t nextId()
  */
 short isConnected()
 {
-
     if (WiFi.status() == WL_CONNECTED && client.connected())
     {
         return 1;
@@ -67,7 +66,7 @@ short isConnected()
         {
             break;
         }
-        delay(2000);
+        delay(1500);
     }
 
     if (WiFi.waitForConnectResult() != WL_CONNECTED)
@@ -373,6 +372,7 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     char payload[256];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
     request(payload);
+    network_listen();
 }
 
 void network_listen()
@@ -394,7 +394,7 @@ void network_listen()
             response(data);
         }
 #if defined(ESP32)
-        delay(100);
+        delay(89);
 #endif
     } while (len > 0);
     isListening = 0;
