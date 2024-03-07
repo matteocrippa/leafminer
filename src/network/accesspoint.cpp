@@ -132,6 +132,8 @@ void accesspoint_webserver()
     l_info(TAG_AP, "Webserver Started");
 }
 
+uint64_t accesspoint_uptime = 0;
+
 void accesspoint_setup()
 {
     l_debug(TAG_AP, "Setup");
@@ -140,10 +142,16 @@ void accesspoint_setup()
     dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
     dnsServer.start(AP_DNS_PORT, "*", WiFi.softAPIP());
     accesspoint_webserver();
+    accesspoint_uptime = millis();
 }
 
 void accesspoint_loop()
 {
     dnsServer.processNextRequest();
     delay(100);
+    if (millis() - accesspoint_uptime > 300000)
+    {
+        l_debug(TAG_AP, "Stop AP and reboot");
+        ESP.restart();
+    }
 }
