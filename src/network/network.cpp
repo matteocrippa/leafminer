@@ -81,6 +81,7 @@ short isConnected()
     while (wifi_stratum < NETWORK_STRATUM_ATTEMPTS)
     {
         l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
+        client.setTimeout(NETWORK_TIMEOUT);
         client.connect(configuration.pool_url.c_str(), configuration.pool_port);
         delay(500);
         if (client.connected())

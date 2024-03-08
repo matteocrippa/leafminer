@@ -3,6 +3,7 @@
 #include "current.h"
 #include "utils/log.h"
 #include "screen/screen.h"
+#include "network/network.h"
 
 char TAG_CURRENT[8] = "Current";
 
@@ -289,13 +290,14 @@ void current_increment_hashes()
  * The current hashrate is calculated in kilohashes per second (KH/s).
  */
 void current_update_hashrate()
-{   
-    if(millis() - current_hashes_time > 1000) {
+{
+    if (millis() - current_hashes_time > 1000)
+    {
         current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
         l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
-        #if defined(HAS_LCD)
+#if defined(HAS_LCD)
         screen_loop();
-        #endif
+#endif
         current_hashes = 0;
         current_hashes_time = millis();
     }
@@ -307,7 +309,7 @@ void current_update_hashrate()
  */
 void current_check_stale()
 {
-    if (millis() - current_last_hash > 60000 * 5)
+    if (millis() - current_last_hash > 200000)
     {
         l_error(TAG_CURRENT, "No hash received in the last 5 minutes. Restarting...");
         ESP.restart();
@@ -315,7 +317,7 @@ void current_check_stale()
 }
 
 #if defined(ESP32)
-#define CURRENT_STALE_TIMEOUT 60000 * 2
+#define CURRENT_STALE_TIMEOUT 50000
 void currentTaskFunction(void *pvParameters)
 {
     while (1)
