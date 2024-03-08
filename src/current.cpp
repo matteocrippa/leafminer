@@ -304,14 +304,14 @@ void current_update_hashrate()
 }
 
 /**
- * Checks if the current hash has not been received in the last 5 minutes.
+ * Checks if the current hash has not been received in the last 3 minutes.
  * If the hash is stale, it logs an error message and restarts the ESP.
  */
 void current_check_stale()
 {
     if (millis() - current_last_hash > 200000)
     {
-        l_error(TAG_CURRENT, "No hash received in the last 5 minutes. Restarting...");
+        l_error(TAG_CURRENT, "No hash received in the last 3 minutes. Restarting...");
         ESP.restart();
     }
 }
