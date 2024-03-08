@@ -88,7 +88,7 @@ Follow these steps to set up your ESP32/ESP8266 with LEAFMINER:
 4. **Provide Information and Save:**
    Fill out the form, click the save button, and then reboot your device.
 
-   We've set _public-pool.io_ as the default solo pool, but feel free to change it to your preference.
+   We've set _pool.vkbit.com_ as the default solo pool, but feel free to change it to your preference.
 
 **Verification:**
 If the setup is successful, you'll see your miner in the stats.
