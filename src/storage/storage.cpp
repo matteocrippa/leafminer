@@ -32,8 +32,8 @@ void storage_load(Configuration *conf)
     conf->wifi_password = preferences.getString("wifi_password", "").c_str();
     conf->wallet_address = preferences.getString("wallet_address", "").c_str();
     conf->pool_password = preferences.getString("pool_password", "").c_str();
-    conf->pool_url = preferences.getString("pool_url", "public-pool.io").c_str();
-    conf->pool_port = preferences.getUInt("pool_port", 21496);
+    conf->pool_url = preferences.getString("pool_url", "pool.vkbit.com").c_str();
+    conf->pool_port = preferences.getUInt("pool_port", 3333);
     conf->blink_enabled = preferences.getString("blink_enabled", "on").c_str();
     conf->blink_brightness = preferences.getUInt("blink_bright", 256);
     conf->lcd_on_start = preferences.getString("lcd_on_start", "on").c_str();

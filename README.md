@@ -57,12 +57,12 @@ _Legend_
 
 | Board                                                    | Link                                                        |
 | :------------------------------------------------------- | :---------------------------------------------------------- |
-| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
-| [GeekMagic SmartTV]()                                    | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
-| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.6](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [GeekMagic SmartTV]()                                    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
 
@@ -88,7 +88,7 @@ Follow these steps to set up your ESP32/ESP8266 with LEAFMINER:
 4. **Provide Information and Save:**
    Fill out the form, click the save button, and then reboot your device.
 
-   We've set _public-pool.io_ as the default solo pool, but feel free to change it to your preference.
+   We've set _pool.vkbit.com_ as the default solo pool, but feel free to change it to your preference.
 
 **Verification:**
 If the setup is successful, you'll see your miner in the stats.

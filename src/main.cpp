@@ -85,13 +85,16 @@ void setup()
   btStop();
   xTaskCreate(currentTaskFunction, "stale", 1024, NULL, 1, NULL);
   xTaskCreate(buttonTaskFunction, "button", 1024, NULL, 2, NULL);
-  xTaskCreate(mineTaskFunction, "miner0", 16000, (void *)0, 10, NULL);
+  xTaskCreate(mineTaskFunction, "miner0", 6000, (void *)0, 10, NULL);
+  xTaskCreate(networkTaskFunction, "network", 10000, NULL, 3, NULL);
 #if CORE == 2
-  xTaskCreate(mineTaskFunction, "miner1", 16000, (void *)1, 11, NULL);
+  xTaskCreate(mineTaskFunction, "miner1", 6000, (void *)1, 11, NULL);
 #endif
 #endif
 
+#if defined(ESPS8266)
   network_listen();
+#endif
 }
 
 void loop()

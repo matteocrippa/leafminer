@@ -372,16 +372,20 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     char payload[256];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
     request(payload);
+#if defined(ESP8266)
     network_listen();
+#endif
 }
 
 void network_listen()
 {
+#if defined(ESP8266)
     if (isListening == 1)
     {
         return;
     }
     isListening = 1;
+#endif
     int len = 0;
     isConnected();
     do
@@ -393,9 +397,21 @@ void network_listen()
         {
             response(data);
         }
-#if defined(ESP32)
-        delay(89);
-#endif
     } while (len > 0);
+#if defined(ESP8266)
     isListening = 0;
+#endif
 }
+
+#if defined(ESP32)
+#define NETWORK_TASK_TIMEOUT 600
+void networkTaskFunction(void *pvParameters)
+{
+    while (1)
+    {
+        network_listen();
+        network_listen();
+        vTaskDelay(NETWORK_TASK_TIMEOUT / portTICK_PERIOD_MS);
+    }
+}
+#endif
