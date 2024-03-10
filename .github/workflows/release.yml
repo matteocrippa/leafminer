@@ -47,6 +47,8 @@ jobs:
         run: |
           mkdir -p artifacts
           find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
+          find .pio/build -name "bootloader.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
+          find .pio/build -name "partitions.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
         working-directory: ${{ github.workspace }}
 
       - name: Upload Artifacts

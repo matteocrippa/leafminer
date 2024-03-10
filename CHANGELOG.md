@@ -1,3 +1,3 @@
-# v0.0.8
+# v0.0.9
 
-- Enforce reconnection logic
+- Fix build script for binaries
