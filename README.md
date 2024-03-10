@@ -57,14 +57,16 @@ _Legend_
 
 | Board                                                    | Link                                                        |
 | :------------------------------------------------------- | :---------------------------------------------------------- |
-| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
-| [GeekMagic SmartTV]()                                    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
-| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.8](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
+| [GeekMagic SmartTV]()                                    | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
+| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.9](https://github.com/matteocrippa/leafminer/releases) |
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
+
+<img width="687" alt="LeafMiner Web flash" src="https://github.com/matteocrippa/leafminer/assets/475463/f483b8fe-a563-4249-98f8-092a45a9b4f8">
 
 ### Build from Scratch
 
