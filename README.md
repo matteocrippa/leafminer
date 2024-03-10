@@ -66,6 +66,8 @@ _Legend_
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
 
+<img width="687" alt="LeafMiner Web flash" src="https://github.com/matteocrippa/leafminer/assets/475463/f483b8fe-a563-4249-98f8-092a45a9b4f8">
+
 ### Build from Scratch
 
 - Clone the project
