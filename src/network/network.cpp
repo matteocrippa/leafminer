@@ -12,6 +12,14 @@
 #include "current.h"
 #include "model/configuration.h"
 
+#define NETWORK_BUFFER_SIZE 2048
+#define NETWORK_TIMEOUT 1000 * 60
+#define NETWORK_DELAY 1222
+#define NETWORK_WIFI_ATTEMPTS 2
+#define NETWORK_STRATUM_ATTEMPTS 2
+#define MAX_PAYLOAD_SIZE 256
+#define MAX_PAYLOADS 10
+
 WiFiClient client = WiFiClient();
 char TAG_NETWORK[8] = "Network";
 uint64_t id = 0;
@@ -21,12 +29,8 @@ uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
 uint8_t isListening = 0;
 extern Configuration configuration;
-
-#define NETWORK_BUFFER_SIZE 2048
-#define NETWORK_TIMEOUT 1000 * 60
-#define NETWORK_DELAY 1222
-#define NETWORK_WIFI_ATTEMPTS 2
-#define NETWORK_STRATUM_ATTEMPTS 2
+char payloads[MAX_PAYLOADS][MAX_PAYLOAD_SIZE]; // Array of payloads
+size_t payloads_count = 0;
 
 /**
  * @brief Generates the next ID for the network.
@@ -367,25 +371,38 @@ short network_getJob()
     return 1;
 }
 
+void enqueue(const char *payload) {
+    if (payloads_count < MAX_PAYLOADS) {
+        strncpy(payloads[payloads_count], payload, MAX_PAYLOAD_SIZE - 1);
+        payloads_count++;
+        l_debug(TAG_NETWORK, "Payload queued: %s", payload);
+    } else {
+        l_error(TAG_NETWORK, "Payload queue is full");
+    }
+}
+
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
 {
-    char payload[256];
+    char payload[MAX_PAYLOAD_SIZE];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
-    request(payload);
 #if defined(ESP8266)
     network_listen();
+    request(payload);
+#else
+    enqueue(payload);
 #endif
 }
 
 void network_listen()
 {
-#if defined(ESP8266)
+    #if defined(ESP8266)
     if (isListening == 1)
     {
         return;
     }
     isListening = 1;
-#endif
+    #endif
+
     int len = 0;
     isConnected();
     do
@@ -398,18 +415,45 @@ void network_listen()
             response(data);
         }
     } while (len > 0);
-#if defined(ESP8266)
+
+    #if defined(ESP8266)
     isListening = 0;
-#endif
+    #endif
+}
+
+void network_submit(const char *payload) {
+    if (isConnected() == -1) {
+        return; // Handle connection failure
+    }
+
+    request(payload);
+
+    // Remove the submitted payload from the array
+    for (size_t i = 0; i < payloads_count; ++i) {
+        if (strcmp(payloads[i], payload) == 0) {
+            // Shift remaining payloads
+            for (size_t j = i; j < payloads_count - 1; ++j) {
+                strcpy(payloads[j], payloads[j+1]);
+            }
+            payloads_count--;
+            break;
+        }
+    }
+}
+
+void network_submit_all() {
+    for (size_t i = 0; i < payloads_count; ++i) {
+        network_submit(payloads[i]);
+    }
 }
 
 #if defined(ESP32)
-#define NETWORK_TASK_TIMEOUT 600
+#define NETWORK_TASK_TIMEOUT 100
 void networkTaskFunction(void *pvParameters)
 {
     while (1)
     {
-        network_listen();
+        network_submit_all();
         network_listen();
         vTaskDelay(NETWORK_TASK_TIMEOUT / portTICK_PERIOD_MS);
     }
