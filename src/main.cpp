@@ -29,8 +29,8 @@ bool force_ap = false;
 void setup()
 {
   Serial.begin(115200);
-  delay(1000);
-  l_info(TAG_MAIN, "LeafMiner - v.%s", _VERSION);
+  delay(1500);
+  l_info(TAG_MAIN, "LeafMiner - v.%s - (C: %d)", _VERSION, CORE);
 
 #if defined(ESP8266)
   l_info(TAG_MAIN, "ESP8266 - Disable WDT");

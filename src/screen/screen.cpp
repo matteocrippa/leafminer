@@ -52,7 +52,6 @@ void screen_loop()
 {
   if (!screen_enabled)
   {
-    l_info(TAG_SCREEN, "Screen disabled");
     return;
   }
 
