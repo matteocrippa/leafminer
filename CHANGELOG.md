@@ -1,4 +1,4 @@
-# v0.0.10
+# v0.0.11
 
 - Improved network handling
 

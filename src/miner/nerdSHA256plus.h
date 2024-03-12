@@ -27,8 +27,8 @@
 
 struct nerdSHA256_context
 {
-    MEM_ALIGN_4 uint8_t buffer[NERD_SHA256_BLOCK_SIZE];
-    MEM_ALIGN_32 uint32_t digest[8];
+    uint8_t buffer[NERD_SHA256_BLOCK_SIZE];
+    uint32_t digest[8];
 };
 
 /* Calculate midstate */
