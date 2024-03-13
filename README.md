@@ -23,12 +23,12 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266           |   🟧   | ±16 kH/s          |
+| ESP8266           |   🟩    | ±16 kH/s          |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±80 kH/s          |
 | LILYGO-T-S3       |   🟩   | ±80 kH/s          |
-| SMALLTV (ESP8266) |   🟧   | ±16 kH/s          |
+| SMALLTV (ESP8266) |   🟩    | ±16 kH/s          |
 
 _Legend_
 | Icon | Description |
@@ -118,7 +118,7 @@ If you want to support this project, consider donating:
 |                     |                                                                                                                                                                                                                                                                                                                                                                                     |
 | :------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | AliExpress Referral | Use referral links in the list of hardware above                                                                                                                                                                                                                                                                                                                                    |
-| ⚡️ Lightning       | `lnbc1pj66awapp5es8krc52qvpcaxj4psf5l645rns48l8rxqw9yrhjg78rgx4j0kescqpjsp5e8mwfsrvmh5mjr48x2yca9xrtjte56pf85e3jyw6mumvkadjf5ms9q7sqqqqqqqqqqqqqqqqqqqsqqqqqysgqdqqmqz9gxqyjw5qrzjqwryaup9lh50kkranzgcdnn2fgvx390wgj5jd07rwr3vxeje0glcllul0fkxuh06uqqqqqlgqqqqqeqqjq0p50pdcqt5tvsgtwx2yzc8qehkm8e6vfytjahutne4m3drhwywy8zmq3xl6hg3kpu90jwm2qytqu65w5y5g9t50he43xgslvp2ayjxsq5rycse` |
+| ⚡️ Lightning       | `leafminer@lifpay.me` |
 | Bitcoin             | `bc1quqr7agnx6e0k9kn8h24zfj5dueeurhzflt3qjg`                                                                                                                                                                                                                                                                                                                                        |
 
 ## Credits
