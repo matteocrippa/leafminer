@@ -1,4 +1,4 @@
-# v0.0.11
+# v0.0.12
 
-- Improved network handling
-
+- Fix ESP8266 getting stuck on the job
+- Fix EPS8266 network

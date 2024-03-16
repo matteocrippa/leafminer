@@ -1,7 +1,7 @@
 #ifndef LEAFMINER_H
 #define LEAFMINER_H
 
-#define _VERSION "0.0.11"
+#define _VERSION "0.0.12"
 #define DIFFICULTY 1e-4
 
 // Mining

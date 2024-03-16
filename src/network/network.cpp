@@ -371,12 +371,16 @@ short network_getJob()
     return 1;
 }
 
-void enqueue(const char *payload) {
-    if (payloads_count < MAX_PAYLOADS) {
+void enqueue(const char *payload)
+{
+    if (payloads_count < MAX_PAYLOADS)
+    {
         strncpy(payloads[payloads_count], payload, MAX_PAYLOAD_SIZE - 1);
         payloads_count++;
         l_debug(TAG_NETWORK, "Payload queued: %s", payload);
-    } else {
+    }
+    else
+    {
         l_error(TAG_NETWORK, "Payload queue is full");
     }
 }
@@ -386,8 +390,9 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     char payload[MAX_PAYLOAD_SIZE];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
 #if defined(ESP8266)
-    network_listen();
     request(payload);
+    delay(33);
+    network_listen();
 #else
     enqueue(payload);
 #endif
@@ -395,13 +400,13 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
-    #if defined(ESP8266)
+#if defined(ESP8266)
     if (isListening == 1)
     {
         return;
     }
     isListening = 1;
-    #endif
+#endif
 
     int len = 0;
     isConnected();
@@ -416,24 +421,29 @@ void network_listen()
         }
     } while (len > 0);
 
-    #if defined(ESP8266)
+#if defined(ESP8266)
     isListening = 0;
-    #endif
+#endif
 }
 
-void network_submit(const char *payload) {
-    if (isConnected() == -1) {
+void network_submit(const char *payload)
+{
+    if (isConnected() == -1)
+    {
         return; // Handle connection failure
     }
 
     request(payload);
 
     // Remove the submitted payload from the array
-    for (size_t i = 0; i < payloads_count; ++i) {
-        if (strcmp(payloads[i], payload) == 0) {
+    for (size_t i = 0; i < payloads_count; ++i)
+    {
+        if (strcmp(payloads[i], payload) == 0)
+        {
             // Shift remaining payloads
-            for (size_t j = i; j < payloads_count - 1; ++j) {
-                strcpy(payloads[j], payloads[j+1]);
+            for (size_t j = i; j < payloads_count - 1; ++j)
+            {
+                strcpy(payloads[j], payloads[j + 1]);
             }
             payloads_count--;
             break;
@@ -441,8 +451,10 @@ void network_submit(const char *payload) {
     }
 }
 
-void network_submit_all() {
-    for (size_t i = 0; i < payloads_count; ++i) {
+void network_submit_all()
+{
+    for (size_t i = 0; i < payloads_count; ++i)
+    {
         network_submit(payloads[i]);
     }
 }
