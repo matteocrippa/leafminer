@@ -92,7 +92,7 @@ void setup()
 #endif
 #endif
 
-#if defined(ESPS8266)
+#if defined(ESP8266)
   network_listen();
 #endif
 }
