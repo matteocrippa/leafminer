@@ -81,9 +81,6 @@ void current_setJob(const Notification &notification)
     if (current_job_is_valid == 1)
     {
         current_job_next = new Job(notification, *current_subscribe, current_difficulty);
-#if defined(ESP8266)
-        ESP.wdtFeed();
-#endif
         l_info(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
         return;
     }
