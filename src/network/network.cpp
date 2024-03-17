@@ -92,7 +92,7 @@ short isConnected()
             break;
         }
         wifi_stratum++;
-        delay(2000);
+        delay(1000);
     }
 
     if (!client.connected())
