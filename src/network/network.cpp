@@ -391,7 +391,6 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
 #if defined(ESP8266)
     request(payload);
-    delay(33);
     network_listen();
 #else
     enqueue(payload);
@@ -400,13 +399,13 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
-#if defined(ESP8266)
-    if (isListening == 1)
-    {
-        return;
-    }
-    isListening = 1;
-#endif
+    // #if defined(ESP8266)
+    //     if (isListening == 1)
+    //     {
+    //         return;
+    //     }
+    //     isListening = 1;
+    // #endif
 
     int len = 0;
     isConnected();
@@ -421,9 +420,9 @@ void network_listen()
         }
     } while (len > 0);
 
-#if defined(ESP8266)
-    isListening = 0;
-#endif
+    // #if defined(ESP8266)
+    //     isListening = 0;
+    // #endif
 }
 
 void network_submit(const char *payload)
