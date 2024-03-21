@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 #include <vector>
-#include <memory>
-
 #include "leafminer.h"
 #include "subscribe.h"
 #include "notification.h"
@@ -24,18 +22,13 @@ public:
     std::string extranonce2;
     std::string ntime;
 
-    // Constructor
     Job(const Notification &notification, const Subscribe &subscribe, double difficulty);
-
-    // Destructor
-    ~Job();
 
     uint8_t pickaxe(uint32_t core, uint8_t *hash, uint32_t &winning_nonce);
 
     void setStartNonce(uint32_t start_nonce);
 
 private:
-    // Private member functions
     void nextNonce(uint32_t core);
     void generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash);
     void calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root);
@@ -45,4 +38,5 @@ private:
     char TAG_JOB[4] = "Job";
     double difficulty;
 };
+
 #endif
