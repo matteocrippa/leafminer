@@ -399,13 +399,13 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
-    // #if defined(ESP8266)
-    //     if (isListening == 1)
-    //     {
-    //         return;
-    //     }
-    //     isListening = 1;
-    // #endif
+#if defined(ESP8266)
+    if (isListening == 1)
+    {
+        return;
+    }
+    isListening = 1;
+#endif
 
     int len = 0;
     isConnected();
@@ -420,9 +420,9 @@ void network_listen()
         }
     } while (len > 0);
 
-    // #if defined(ESP8266)
-    //     isListening = 0;
-    // #endif
+#if defined(ESP8266)
+    isListening = 0;
+#endif
 }
 
 void network_submit(const char *payload)
