@@ -1,3 +1,3 @@
-# v0.0.13
+# v0.0.14
 
 - Investigated issue with reboot on ESP8266
