@@ -358,6 +358,7 @@ short network_getJob()
 
     if (isConnected() == -1)
     {
+        current_resetSession();
         return -1;
     }
 
@@ -408,7 +409,11 @@ void network_listen()
 #endif
 
     int len = 0;
-    isConnected();
+    if (isConnected() == -1)
+    {
+        current_resetSession();
+        return; // Handle connection failure
+    }
     do
     {
         char data[NETWORK_BUFFER_SIZE];
@@ -429,6 +434,7 @@ void network_submit(const char *payload)
 {
     if (isConnected() == -1)
     {
+        current_resetSession();
         return; // Handle connection failure
     }
 

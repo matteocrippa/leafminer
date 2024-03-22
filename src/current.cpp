@@ -128,6 +128,14 @@ const char *current_getUptime()
 }
 
 /**
+ * @brief Resets the current session by setting the current_subscribe pointer to nullptr.
+ */
+void current_resetSession()
+{
+    current_subscribe = nullptr;
+}
+
+/**
  * Sets the Subscribe object for the Current class.
  *
  * @param subscribe A pointer to the Subscribe object.
