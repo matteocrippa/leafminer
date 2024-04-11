@@ -79,6 +79,10 @@ short isConnected()
         return -1;
     }
 
+    l_info(TAG_NETWORK, "Connected to WiFi");
+    l_info(TAG_NETWORK, "IP address: %s", WiFi.localIP().toString().c_str());
+    l_info(TAG_NETWORK, "MAC address: %s", WiFi.macAddress().c_str());
+
     uint16_t wifi_stratum = 0;
 
     // and we are connected to the host
