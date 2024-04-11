@@ -76,11 +76,29 @@
       <label>Pool Port:</label>
       <input type="number" name="pool_port" value="{{pool_port}}" />
       <br />
+      <label>Auto Update:</label>
+      Off
+      <input
+        type="radio"
+        id="auto_update_off"
+        name="auto_update"
+        value="off"
+        {{auto_update_off}}
+      />
+      On
+      <input
+        type="radio"
+        id="auto_update_on"
+        name="auto_update"
+        value="on"
+        {{auto_update_on}}
+      />
+      <br />
       <label>Blinking Enabled:</label>
       Off
       <input
         type="radio"
-        id="lcd_on_start_off"
+        id="blink_enabled_off"
         name="blink_enabled"
         value="off"
         {{blink_enabled_off}}
@@ -88,7 +106,7 @@
       On
       <input
         type="radio"
-        id="lcd_on_start_on"
+        id="blink_enabled_on"
         name="blink_enabled"
         value="on"
         {{blink_enabled_on}}

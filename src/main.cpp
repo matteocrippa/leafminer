@@ -70,7 +70,10 @@ void setup()
   screen_setup();
 #endif // HAS_LCD
 
-  autoupdate();
+  if (configuration.auto_update == "on")
+  {
+    autoupdate();
+  }
 
   if (network_getJob() == -1)
   {

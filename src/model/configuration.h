@@ -16,6 +16,7 @@ struct Configuration
     int blink_brightness = 256;
     std::string lcd_on_start = "";
     std::string miner_type = "";
+    std::string auto_update = "";
 };
 
 #endif
