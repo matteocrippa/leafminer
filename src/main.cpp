@@ -46,6 +46,7 @@ void setup()
   force_ap = button_setup();
 
   storage_load(&configuration);
+  configuration.print();
 
   if (configuration.wifi_ssid == "" || force_ap)
   {
