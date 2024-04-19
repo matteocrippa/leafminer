@@ -51,9 +51,9 @@ jobs:
               ["esp8266"]="0x0000_firmware"
               ["geekmagic-smalltv"]="0x0000_firmware"
               ["esp32"]="0x10000_firmware 0x1000_bootloader 0x8000_partitions"
-              ["esp32-s2"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
-              ["esp32-s3"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
-              ["lilygo-t-display-s3"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
+              ["esp32-s2"]="0x10000_firmware 0x1000_bootloader 0x8000_partitions"
+              ["esp32-s3"]="0x10000_firmware 0x1000_bootloader 0x8000_partitions"
+              ["lilygo-t-display-s3"]="0x10000_firmware 0x1000_bootloader 0x8000_partitions"
           )
 
           # Iterate through each board and copy corresponding files
