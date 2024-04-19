@@ -17,6 +17,7 @@ const char *current_getJobId();
 const char *current_getUptime();
 void current_setSubscribe(Subscribe *subscribe);
 const char *current_getSessionId();
+void current_resetSession();
 void current_setDifficulty(double difficulty);
 const double current_getDifficulty();
 void current_increment_block_found();

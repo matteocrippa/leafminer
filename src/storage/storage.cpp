@@ -23,6 +23,7 @@ void storage_save(const Configuration &conf)
     preferences.putString("blink_enabled", conf.blink_enabled.c_str());
     preferences.putUInt("blink_bright", conf.blink_brightness);
     preferences.putString("lcd_on_start", conf.lcd_on_start.c_str());
+    preferences.putString("auto_update", conf.auto_update.c_str());
     preferences.end();
 }
 
@@ -37,4 +38,5 @@ void storage_load(Configuration *conf)
     conf->blink_enabled = preferences.getString("blink_enabled", "on").c_str();
     conf->blink_brightness = preferences.getUInt("blink_bright", 256);
     conf->lcd_on_start = preferences.getString("lcd_on_start", "on").c_str();
+    conf->auto_update = preferences.getString("auto_update", "on").c_str();
 }

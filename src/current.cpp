@@ -78,12 +78,16 @@ void current_setJob(const Notification &notification)
             l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
         }
     }
+
     if (current_job_is_valid == 1)
     {
+#if CORES > 1
         current_job_next = new Job(notification, *current_subscribe, current_difficulty);
         l_info(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
+#endif
         return;
     }
+
     current_job = new Job(notification, *current_subscribe, current_difficulty);
     current_job_is_valid = 1;
     l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
@@ -125,6 +129,14 @@ const char *current_getUptime()
     sprintf(uptimeString, "%lldd %lldh %lldm", days, hours % 24, minutes % 60);
 
     return uptimeString;
+}
+
+/**
+ * @brief Resets the current session by setting the current_subscribe pointer to nullptr.
+ */
+void current_resetSession()
+{
+    current_subscribe = nullptr;
 }
 
 /**

@@ -51,6 +51,9 @@ std::string prepareHtmlWithValues(const Configuration &configuration)
     bool is_lcd_on = strcmp(configuration.lcd_on_start.c_str(), "on") == 0;
     replacePattern(html, "{{lcd_on_start_on}}", is_lcd_on ? "checked=\"checked\"" : "");
     replacePattern(html, "{{lcd_on_start_off}}", !is_lcd_on ? "checked=\"checked\"" : "");
+    bool is_autoupdate_on = strcmp(configuration.auto_update.c_str(), "on") == 0;
+    replacePattern(html, "{{auto_update_on}}", is_autoupdate_on ? "checked=\"checked\"" : "");
+    replacePattern(html, "{{auto_update_off}}", !is_autoupdate_on ? "checked=\"checked\"" : "");
     return html;
 }
 
@@ -121,6 +124,7 @@ void accesspoint_webserver()
         conf.blink_enabled = request->arg("blink_enabled").c_str();
         conf.blink_brightness = request->arg("blink_brightness").toInt();
         conf.lcd_on_start = request->arg("lcd_on_start").c_str();
+        conf.auto_update = request->arg("auto_update").c_str();
         storage_save(conf);
 
         request->send(200, "text/html", "<html><body>Data saved successfully!<br/><br/>Please reboot your board!</body></html>"); });

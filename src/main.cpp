@@ -31,6 +31,19 @@ void setup()
   Serial.begin(115200);
   delay(1500);
   l_info(TAG_MAIN, "LeafMiner - v.%s - (C: %d)", _VERSION, CORE);
+  l_info(TAG_MAIN, "Compiled: %s %s", __DATE__, __TIME__);
+  l_info(TAG_MAIN, "Free memory: %d", ESP.getFreeHeap());
+#if defined(ESP32)
+  l_info(TAG_MAIN, "Chip Model: %s - Rev: %d", ESP.getChipModel(), ESP.getChipRevision());
+  uint32_t chipID = 0;
+  for (int i = 0; i < 17; i = i + 8)
+  {
+    chipID |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+  }
+  l_info(TAG_MAIN, "Chip ID: %s", chipID);
+#else
+  l_info(TAG_MAIN, "Chip ID: %s", ESP.getChipId());
+#endif
 
 #if defined(ESP8266)
   l_info(TAG_MAIN, "ESP8266 - Disable WDT");
@@ -46,6 +59,7 @@ void setup()
   force_ap = button_setup();
 
   storage_load(&configuration);
+  configuration.print();
 
   if (configuration.wifi_ssid == "" || force_ap)
   {
@@ -70,7 +84,10 @@ void setup()
   screen_setup();
 #endif // HAS_LCD
 
-  autoupdate();
+  if (configuration.auto_update == "on")
+  {
+    autoupdate();
+  }
 
   if (network_getJob() == -1)
   {
