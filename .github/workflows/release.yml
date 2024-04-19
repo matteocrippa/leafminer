@@ -46,9 +46,22 @@ jobs:
       - name: Archive Artifacts
         run: |
           mkdir -p artifacts
-          find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
-          find .pio/build -name "bootloader.bin" -exec sh -c 'cp "{}" "artifacts/bootloader_$(basename $(dirname {})).bin"' \;
-          find .pio/build -name "partitions.bin" -exec sh -c 'cp "{}" "artifacts/partitions_$(basename $(dirname {})).bin"' \;
+          # Define the mapping of board names to file prefixes
+          declare -A board_map=(
+              ["esp8266"]="0x0000_firmware"
+              ["geekmagic-smalltv"]="0x0000_firmware"
+              ["esp32"]="0x10000_firmware 0x1000_bootloader 0x8000_partitions"
+              ["esp32-s2"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
+              ["esp32-s3"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
+              ["lilygo-t-display-s3"]="0x10000_firmware 0x0000_bootloader 0x8000_partitions"
+          )
+
+          # Iterate through each board and copy corresponding files
+          for board in "${!board_map[@]}"; do
+              for file_type in ${board_map[$board]}; do
+                  find .pio/build -name "${file_type}.bin" -exec sh -c 'cp "{}" "artifacts/'"${board_map[$board]}"'_$(basename $(dirname {})).bin"' \;
+              done
+          done
         working-directory: ${{ github.workspace }}
 
       - name: Upload Artifacts
