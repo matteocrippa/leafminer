@@ -46,7 +46,7 @@ jobs:
       - name: Archive Artifacts
         run: |
           mkdir -p artifacts
-          # Define the mapping of board names to file prefixes and addresses
+          # Define the mapping of board names to file prefixes
           declare -A board_map=(
               ["esp8266"]="0x0000_firmware"
               ["geekmagic-smalltv"]="0x0000_firmware"
@@ -58,10 +58,9 @@ jobs:
 
           # Iterate through each board and copy corresponding files
           for board in "${!board_map[@]}"; do
-              for address in ${board_map[$board]}; do
-                  address_prefix=$(echo $address | cut -d'_' -f1)
-                  file_type=$(echo $address | cut -d'_' -f2)
-                  find .pio/build -name "${file_type}.bin" -exec sh -c 'cp "{}" "artifacts/'"${address_prefix}_${file_type}_${board}"'_$(basename $(dirname {})).bin"' \;
+              address_prefix=$(echo "${board_map[$board]}" | cut -d'_' -f1)
+              for file_type in ${board_map[$board]}; do
+                  find .pio/build -path "*${board}*" -name "${file_type}.bin" -exec sh -c 'cp "{}" "artifacts/'"${address_prefix}_${file_type}.bin"' \;
               done
           done
         working-directory: ${{ github.workspace }}
