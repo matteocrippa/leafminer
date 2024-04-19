@@ -64,7 +64,9 @@ _Legend_
 | [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.14](https://github.com/matteocrippa/leafminer/releases) |
 | [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.14](https://github.com/matteocrippa/leafminer/releases) |
 
-- Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and follow the instructions.
+- Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and upload the file according to the address in the file name.
+
+For example this is how ESP32-S3 will look like:
 
 <img width="687" alt="LeafMiner Web flash" src="https://github.com/matteocrippa/leafminer/assets/475463/f483b8fe-a563-4249-98f8-092a45a9b4f8">
 
