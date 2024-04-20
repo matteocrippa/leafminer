@@ -64,7 +64,7 @@ jobs:
             for address in ${board_map[$board]}; do
                 address_prefix=$(echo $address | cut -d'_' -f1)
                 file_type=$(echo $address | cut -d'_' -f2)
-                find .pio/build -name "${file_type}.bin" -exec sh -c 'cp "{}" "artifacts/'"${address_prefix}_${file_type}_${board}"'_$(basename $(dirname {})).bin"' \;
+                find .pio/build/$board -name "${file_type}.bin" -exec sh -c 'cp "{}" "artifacts/'"${address_prefix}_${file_type}_${board}.bin"'"' \;
             done
             rm -rf .pio/build/$board
           done
