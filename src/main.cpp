@@ -41,8 +41,8 @@ void setup()
     chipID |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
   }
   l_info(TAG_MAIN, "Chip ID: %s", chipID);
-#else
-  l_info(TAG_MAIN, "Chip ID: %s", ESP.getChipId());
+// #else
+//   l_info(TAG_MAIN, "Chip ID: %s", ESP.getChipId());
 #endif
 
 #if defined(ESP8266)
