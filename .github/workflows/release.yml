@@ -43,9 +43,19 @@ jobs:
       - name: Build PlatformIO Project
         run: pio run
 
-      - name: Archive Artifacts
+      - name: Create Artifacts Directory
+        run: mkdir -p artifacts
+
+      - name: Archive Firmware
         run: |
-          mkdir -p artifacts
+          declare -A current_board=$(basename $(dirname {}))
+
+          find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
+
+        working-directory: ${{ github.workspace }}
+
+      - name: Archive Artifacts with Address
+        run: |
           # Define the mapping of board names to file prefixes
           declare -A board_map=(
               ["esp8266"]="0x0000_firmware"
