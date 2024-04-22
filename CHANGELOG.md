@@ -1,7 +1,4 @@
-# v0.0.14
+# v0.0.15
 
-- Investigated issue with reboot on ESP8266
-- Add support for disable auto update to WebUI
-- Fix WebUI bug for blinking
-- Add new build script with address to write the binaries
-- Updated readme
+- Fix setup.html adding auto update
+- Fix 
