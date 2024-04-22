@@ -48,9 +48,13 @@ jobs:
 
       - name: Archive Firmware
         run: |
-          declare -A current_board=$(basename $(dirname {}))
-
           find .pio/build -name "firmware.bin" -exec sh -c 'cp "{}" "artifacts/firmware_$(basename $(dirname {})).bin"' \;
+
+        working-directory: ${{ github.workspace }}
+
+      - name: Archive OTA ESP32
+        run: |
+          find .pio/build -name "firmware.bin" -exec sh -c 'cp ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin "artifacts/0xe000_boot_$(basename $(dirname {})).bin"' \;
 
         working-directory: ${{ github.workspace }}
 
