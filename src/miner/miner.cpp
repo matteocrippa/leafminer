@@ -16,10 +16,13 @@ void miner(uint32_t core)
     uint32_t winning_nonce = 0;
     uint8_t hash[SHA256M_BLOCK_SIZE];
 
+    uint32_t antilock = 5;
+
     while (1)
     {
         if (current_job_is_valid == 0)
         {
+            l_error(TAG_MINER, "[%d] > No valid job", core);
             return;
         }
 
@@ -37,11 +40,10 @@ void miner(uint32_t core)
         diff_hash = diff_from_target(hash);
         if (diff_hash > current_getDifficulty())
         {
+            l_debug(TAG_MINER, "[%d] > Hash %.12f > %.12f", core, diff_hash, current_getDifficulty());
             break;
         }
-#if defined(ESP32)
         current_update_hashrate();
-#endif
     }
 
 #if defined(HAS_LCD)
@@ -50,10 +52,6 @@ void miner(uint32_t core)
 
     l_info(TAG_MINER, "[%d] > [%s] > 0x%.8x - diff %.12f", core, current_job->job_id.c_str(), winning_nonce, diff_hash);
     network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
-
-#if defined(ESP8266)
-    current_update_hashrate();
-#endif
 
     current_setHighestDifficulty(diff_hash);
 
