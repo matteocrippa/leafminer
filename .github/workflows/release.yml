@@ -54,18 +54,21 @@ jobs:
 
       - name: Archive OTA ESP32
         run: |
-          declare -A board_map=(
+          declare -A ota_map=(
             ["esp32"]="0xe000_boot"
             ["esp32-s2"]="0xe000_boot"
             ["esp32-s3"]="0xe000_boot"
             ["lilygo-t-display-s3"]="0xe000_boot"
           )
-          for board in "${!board_map[@]}"; do
+          for board in "${!ota_map[@]}"; do
             if [ ! -d ".pio/build/$board" ]; then
               continue
             fi
-            find .pio/build/$board -name "firmware.bin" -exec sh -c 'cp ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin "artifacts/'"${board_map[$board]}_$(basename $(dirname {})).bin"'"' \;
-            rm -rf .pio/build/$board
+            for address in ${board_map[$board]}; do
+                address_prefix=$(echo $address | cut -d'_' -f1)
+                file_type=$(echo $address | cut -d'_' -f2)
+                find .pio/build/$board -name "firmware.bin" -exec sh -c '~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin "{}" "artifacts/'"${address_prefix}_${file_type}_${board}.bin"'"' \;
+            done
           done
 
         working-directory: ${{ github.workspace }}
