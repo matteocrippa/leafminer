@@ -27,7 +27,6 @@ uint64_t requestJobId = 0;
 uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
-uint8_t isListening = 0;
 extern Configuration configuration;
 char payloads[MAX_PAYLOADS][MAX_PAYLOAD_SIZE]; // Array of payloads
 size_t payloads_count = 0;
@@ -404,14 +403,6 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
-#if defined(ESP8266)
-    if (isListening == 1)
-    {
-        return;
-    }
-    isListening = 1;
-#endif
-
     int len = 0;
     if (isConnected() == -1)
     {
@@ -428,10 +419,6 @@ void network_listen()
             response(data);
         }
     } while (len > 0);
-
-#if defined(ESP8266)
-    isListening = 0;
-#endif
 }
 
 void network_submit(const char *payload)
