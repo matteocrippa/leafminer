@@ -42,28 +42,44 @@ extern Configuration configuration;
 //  1 if version1 is newer
 //  0 if both versions are equal
 // -1 if version2 is newer
-int compareVersions(const char* version1, const char* version2) {
+int compareVersions(const char *version1, const char *version2)
+{
     int major1, minor1, patch1;
     int major2, minor2, patch2;
 
     sscanf(version1, "%d.%d.%d", &major1, &minor1, &patch1);
     sscanf(version2, "%d.%d.%d", &major2, &minor2, &patch2);
 
-    if (major1 > major2) {
+    if (major1 > major2)
+    {
         return 1;
-    } else if (major1 < major2) {
+    }
+    else if (major1 < major2)
+    {
         return -1;
-    } else {
-        if (minor1 > minor2) {
+    }
+    else
+    {
+        if (minor1 > minor2)
+        {
             return 1;
-        } else if (minor1 < minor2) {
+        }
+        else if (minor1 < minor2)
+        {
             return -1;
-        } else {
-            if (patch1 > patch2) {
+        }
+        else
+        {
+            if (patch1 > patch2)
+            {
                 return 1;
-            } else if (patch1 < patch2) {
+            }
+            else if (patch1 < patch2)
+            {
                 return -1;
-            } else {
+            }
+            else
+            {
                 return 0; // Versions are equal
             }
         }
