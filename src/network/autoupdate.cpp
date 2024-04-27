@@ -185,7 +185,7 @@ void autoupdate()
                         {
                             l_debug(TAG_AUTOUPDATE, "Begin Update");
                             size_t written = Update.writeStream(http.getStream());
-                            if (written == http.getSize())
+                            if (written == static_cast<size_t>(http.getSize()))
                             {
                                 l_debug(TAG_AUTOUPDATE, "Written: %d", written);
                                 if (Update.end())

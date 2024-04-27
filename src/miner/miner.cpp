@@ -16,20 +16,11 @@ void miner(uint32_t core)
     uint32_t winning_nonce = 0;
     uint8_t hash[SHA256M_BLOCK_SIZE];
 
-    uint32_t antilock = 5;
-
-    while (1)
+    while (current_job_is_valid)
     {
-        if (current_job_is_valid == 0)
-        {
-            l_error(TAG_MINER, "[%d] > No valid job", core);
-            return;
-        }
-
 #if defined(ESP8266)
         ESP.wdtFeed();
-#endif // ESP8266
-
+#endif
         current_increment_hashes();
 
         if (!current_job->pickaxe(core, hash, winning_nonce))
@@ -66,10 +57,10 @@ void miner(uint32_t core)
 void mineTaskFunction(void *pvParameters)
 {
     uint32_t core = (uint32_t)pvParameters;
-    while (1)
+    while (current_job_is_valid)
     {
         miner(core);
-        vTaskDelay(33 / portTICK_PERIOD_MS);
+        vTaskDelay(33 / portTICK_PERIOD_MS); // Add a small delay to prevent tight loop
     }
 }
 #endif
