@@ -90,8 +90,8 @@ void current_setJob(const Notification &notification)
 
     current_job = new Job(notification, *current_subscribe, current_difficulty);
     current_job_is_valid = 1;
-    l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
     current_increment_processedJob();
+    l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
 }
 
 /**

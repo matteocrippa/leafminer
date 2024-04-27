@@ -1,6 +1,4 @@
-# v0.0.15
+# v0.0.16
 
-- Fix setup.html adding auto update
-- Fix configuration dump
-- Tweak ESP8266 hash rate print
-- Add 0xe000 for esp32 for boot
+- Fix ESP8266 stuck after few minutes
+- Reworked the CI bundle
