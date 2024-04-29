@@ -324,6 +324,7 @@ void response(std::string r)
         else
         {
             current_job_is_valid = 0;
+#if defined(ESP32)
             if (current_job_next != nullptr)
             {
                 current_job = current_job_next;
@@ -332,6 +333,7 @@ void response(std::string r)
                 l_debug(TAG_NETWORK, "Job (next): %s ready to be mined", current_job->job_id.c_str());
                 current_increment_processedJob();
             }
+#endif
             current_increment_hash_rejected();
         }
     }
@@ -418,6 +420,7 @@ void network_listen()
         if (isConnected() == -1)
         {
             current_resetSession();
+
             return; // Handle connection failure
         }
 

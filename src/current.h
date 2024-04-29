@@ -7,7 +7,9 @@
 #include "model/configuration.h"
 
 extern Job *current_job;
+#if defined(ESP32)
 extern Job *current_job_next;
+#endif
 extern uint16_t current_job_is_valid;
 
 void current_setJob(const Notification &notification);

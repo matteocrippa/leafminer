@@ -4,12 +4,12 @@
 #include "utils/log.h"
 #include "screen/screen.h"
 
-char TAG_CURRENT[8] = "Current";
+char TAG_CURRENT[] = "Current";
 
+// Global variables
 Job *current_job = nullptr;
-Job *current_job_next = nullptr;
-uint16_t current_job_is_valid = 0;
 Subscribe *current_subscribe = nullptr;
+uint16_t current_job_is_valid = 0;
 uint64_t current_job_processed = 0;
 double current_difficulty = UINT_MAX;
 double current_difficulty_highest = 0.0;
@@ -19,9 +19,16 @@ uint64_t current_hash_rejected = 0;
 uint32_t current_hashes = 0;
 uint64_t current_hashes_time = 0;
 double current_hashrate = 0;
-uint64_t current_uptime = millis();
-uint64_t current_last_hash = millis();
+uint64_t current_uptime = 0;
+uint64_t current_last_hash = 0;
 
+// Function prototypes
+void deleteCurrentJob();
+void deleteCurrentSubscribe();
+void cleanupResources();
+void handleException();
+
+// Function implementations
 bool current_hasJob()
 {
     return current_job != nullptr;
@@ -34,64 +41,68 @@ void current_increment_processedJob()
 
 void current_setJob(const Notification &notification)
 {
-    if (current_subscribe == nullptr)
+    try
     {
-        l_error(TAG_CURRENT, "Subscribe object is null");
-        return;
-    }
-
-    if (notification.clean_jobs)
-    {
-        current_job_is_valid = 0;
-        if (current_job != nullptr)
+        if (current_subscribe == nullptr)
         {
-            l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+            l_error(TAG_CURRENT, "Subscribe object is null");
+            return;
         }
-    }
 
-    if (current_job_is_valid == 1)
+        if (notification.clean_jobs)
+        {
+            current_job_is_valid = 0;
+            if (current_job != nullptr)
+            {
+                l_debug(TAG_CURRENT, "Job: %s is cleaned and replaced with %s", current_job->job_id.c_str(), notification.job_id.c_str());
+            }
+        }
+
+        deleteCurrentJob();
+
+        current_job = new Job(notification, *current_subscribe, current_difficulty);
+        current_job_is_valid = 1;
+        current_increment_processedJob();
+        l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
+    }
+    catch (...)
     {
-#if CORES > 1
-        current_job_next = new Job(notification, *current_subscribe, current_difficulty);
-        l_info(TAG_CURRENT, "Job: %s queued", current_job_next->job_id.c_str());
-#endif
-        return;
+        handleException();
     }
-
-    current_job = new Job(notification, *current_subscribe, current_difficulty);
-    current_job_is_valid = 1;
-    current_increment_processedJob();
-    l_info(TAG_CURRENT, "Job: %s ready to be mined", current_job->job_id.c_str());
 }
 
-const char *current_getJobId()
+void deleteCurrentJob()
 {
-    return (current_job != nullptr) ? current_job->job_id.c_str() : "--";
-}
-
-const char *current_getUptime()
-{
-    uint64_t time = millis() - current_uptime;
-    uint64_t seconds = time / 1000;
-    uint64_t minutes = seconds / 60;
-    uint64_t hours = minutes / 60;
-    uint64_t days = hours / 24;
-
-    static char uptimeString[22];
-    snprintf(uptimeString, sizeof(uptimeString), "%lldd %lldh %lldm", days, hours % 24, minutes % 60);
-
-    return uptimeString;
+    delete current_job;
+    current_job = nullptr;
 }
 
 void current_resetSession()
 {
+    l_error(TAG_CURRENT, "Session reset");
+    deleteCurrentSubscribe();
+    current_job_is_valid = 0;
+    deleteCurrentJob();
+}
+
+void deleteCurrentSubscribe()
+{
+    delete current_subscribe;
     current_subscribe = nullptr;
 }
 
 void current_setSubscribe(Subscribe *subscribe)
 {
-    l_info(TAG_CURRENT, "New session id: %s", subscribe->id.c_str());
-    current_subscribe = subscribe;
+    try
+    {
+        l_info(TAG_CURRENT, "New session id: %s", subscribe->id.c_str());
+        deleteCurrentSubscribe();
+        current_subscribe = subscribe;
+    }
+    catch (...)
+    {
+        handleException();
+    }
 }
 
 const char *current_getSessionId()
@@ -101,8 +112,15 @@ const char *current_getSessionId()
 
 void current_setDifficulty(double difficulty)
 {
-    l_info(TAG_CURRENT, "New difficulty: %.12f", difficulty);
-    current_difficulty = difficulty;
+    try
+    {
+        l_info(TAG_CURRENT, "New difficulty: %.12f", difficulty);
+        current_difficulty = difficulty;
+    }
+    catch (...)
+    {
+        handleException();
+    }
 }
 
 const double current_getDifficulty()
@@ -128,10 +146,17 @@ const double current_get_hashrate()
 
 void current_setHighestDifficulty(double difficulty)
 {
-    if (difficulty > current_difficulty_highest)
+    try
     {
-        current_difficulty_highest = difficulty;
-        l_info(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
+        if (difficulty > current_difficulty_highest)
+        {
+            current_difficulty_highest = difficulty;
+            l_info(TAG_CURRENT, "New highest hashed difficulty: %.12f", difficulty);
+        }
+    }
+    catch (...)
+    {
+        handleException();
     }
 }
 
@@ -142,9 +167,16 @@ const double current_getHighestDifficulty()
 
 void current_increment_hash_accepted()
 {
-    current_hash_accepted++;
-    current_last_hash = millis();
-    l_info(TAG_CURRENT, "Hash accepted: %d", current_hash_accepted);
+    try
+    {
+        current_hash_accepted++;
+        current_last_hash = millis();
+        l_info(TAG_CURRENT, "Hash accepted: %d", current_hash_accepted);
+    }
+    catch (...)
+    {
+        handleException();
+    }
 }
 
 const uint32_t current_get_hash_accepted()
@@ -154,9 +186,16 @@ const uint32_t current_get_hash_accepted()
 
 void current_increment_hash_rejected()
 {
-    current_hash_rejected++;
-    current_last_hash = millis();
-    l_info(TAG_CURRENT, "Hash rejected: %d", current_hash_rejected);
+    try
+    {
+        current_hash_rejected++;
+        current_last_hash = millis();
+        l_info(TAG_CURRENT, "Hash rejected: %d", current_hash_rejected);
+    }
+    catch (...)
+    {
+        handleException();
+    }
 }
 
 const uint32_t current_get_hash_rejected()
@@ -166,34 +205,69 @@ const uint32_t current_get_hash_rejected()
 
 void current_increment_hashes()
 {
-    if (current_hashes_time == 0)
+    try
     {
-        current_hashes_time = millis();
+        if (current_hashes_time == 0)
+        {
+            current_hashes_time = millis();
+        }
+        current_hashes++;
     }
-    current_hashes++;
+    catch (...)
+    {
+        handleException();
+    }
 }
 
 void current_update_hashrate()
 {
-    if (millis() - current_hashes_time > 1000)
+    try
     {
-        current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
-        l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+        if (millis() - current_hashes_time > 1000)
+        {
+            current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
+            l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
 #if defined(HAS_LCD)
-        screen_loop();
+            screen_loop();
 #endif
-        current_hashes = 0;
-        current_hashes_time = millis();
+            current_hashes = 0;
+            current_hashes_time = millis();
+        }
+    }
+    catch (...)
+    {
+        handleException();
     }
 }
 
 void current_check_stale()
 {
-    if (millis() - current_last_hash > 200000)
+    try
     {
-        l_error(TAG_CURRENT, "No hash received in the last 3 minutes. Restarting...");
-        ESP.restart();
+        if (millis() - current_last_hash > 200000)
+        {
+            l_error(TAG_CURRENT, "No hash received in the last 3 minutes. Restarting...");
+            ESP.restart();
+        }
     }
+    catch (...)
+    {
+        handleException();
+    }
+}
+
+void handleException()
+{
+    // Handle exceptions gracefully, e.g., log the error, perform cleanup, etc.
+    l_error(TAG_CURRENT, "Exception occurred. Cleaning up resources...");
+    cleanupResources();
+}
+
+void cleanupResources()
+{
+    deleteCurrentJob();
+    deleteCurrentSubscribe();
+    // Additional cleanup code can be added here if necessary
 }
 
 #if defined(ESP32)

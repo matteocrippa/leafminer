@@ -8,7 +8,7 @@
 #include "screen/screen.h"
 #endif
 
-char TAG_MINER[6] = "Miner";
+char TAG_MINER[] = "Miner";
 
 void miner(uint32_t core)
 {
