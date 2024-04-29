@@ -23,7 +23,7 @@ The SHA256 code is based on a tweaked version of [NerdSHA256plus](https://github
 
 | Board             | Status | Expected Hashrate |
 | :---------------- | :----: | :---------------- |
-| ESP8266           |   🟩   | ±16 kH/s          |
+| ESP8266           |   🟧  | ±16 kH/s          |
 | ESP32             |   🟩   | ±48 kH/s          |
 | ESP32-S2          |   🟩   | ±19 kH/s          |
 | ESP32-S3          |   🟩   | ±80 kH/s          |
@@ -57,12 +57,12 @@ _Legend_
 
 | Board                                                    | Link                                                         |
 | :------------------------------------------------------- | :----------------------------------------------------------- |
-| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
-| [GeekMagic SmartTV]()                                    | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
-| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
-| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.16](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP8266](https://s.click.aliexpress.com/e/_EuwffHJ)     | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
+| [GeekMagic SmartTV]()                                    | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32](https://s.click.aliexpress.com/e/_Ey6AJnT)       | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S2](https://s.click.aliexpress.com/e/_EGJcibR)    | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
+| [ESP32-S3](https://s.click.aliexpress.com/e/_EJbAXyl)    | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
+| [LILYGO-T-S3](https://s.click.aliexpress.com/e/_ExRWk6H) | [0.0.17](https://github.com/matteocrippa/leafminer/releases) |
 
 - Browse to [ESPWebtool](https://esp.huhn.me/) using a Chrome based browser and upload the file according to the address in the file name.
 
