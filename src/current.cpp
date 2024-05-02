@@ -258,7 +258,6 @@ void current_check_stale()
 
 void handleException()
 {
-    // Handle exceptions gracefully, e.g., log the error, perform cleanup, etc.
     l_error(TAG_CURRENT, "Exception occurred. Cleaning up resources...");
     cleanupResources();
 }
@@ -267,7 +266,6 @@ void cleanupResources()
 {
     deleteCurrentJob();
     deleteCurrentSubscribe();
-    // Additional cleanup code can be added here if necessary
 }
 
 #if defined(ESP32)

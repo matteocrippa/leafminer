@@ -1,6 +1,6 @@
 #include "job.h"
 #if defined(ESP8266)
-#include "TridentTD_ESP_TrueRandom.h"
+#include <ESP8266WiFi.h>
 #else
 #include "esp_random.h"
 #endif
@@ -79,7 +79,8 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
     {
         // Generate a random number between 0 and INT_MAX
 #if defined(ESP8266)
-        uint32_t randomValue = esp.random(0, INT_MAX);
+        randomSeed(analogRead(A0));
+        uint32_t randomValue = random();
 #else
         uint32_t randomValue = esp_random();
 #endif
@@ -88,6 +89,8 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
         // Convert the random number to a hex string
         char hexString[9]; // Enough to hold a 32-bit integer in hex (including null terminator)
         snprintf(hexString, sizeof(hexString), "%08X", randomValue);
+
+        l_info(TAG_JOB, "Hex value: %s", hexString);
 
         return std::string(hexString);
     }
@@ -108,6 +111,7 @@ void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbas
         uint8_t hash[SHA256M_BLOCK_SIZE];
         sha256_double(coinbaseBytes, len / 2, hash);
         coinbase_hash = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
+        l_debug(TAG_JOB, "Coinbase hash: %s", coinbase_hash.c_str());
     }
     catch (...)
     {
@@ -138,6 +142,7 @@ void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vecto
         }
 
         merkle_root = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
+        l_debug(TAG_JOB, "Merkle root: %s", merkle_root.c_str());
     }
     catch (...)
     {
