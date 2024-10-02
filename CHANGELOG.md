@@ -1,4 +1,3 @@
-# v0.0.16
+# v0.0.17
 
-- Fix ESP8266 stuck after few minutes
-- Reworked the CI bundle
+-

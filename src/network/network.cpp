@@ -324,6 +324,7 @@ void response(std::string r)
         else
         {
             current_job_is_valid = 0;
+#if defined(ESP32)
             if (current_job_next != nullptr)
             {
                 current_job = current_job_next;
@@ -332,6 +333,7 @@ void response(std::string r)
                 l_debug(TAG_NETWORK, "Job (next): %s ready to be mined", current_job->job_id.c_str());
                 current_increment_processedJob();
             }
+#endif
             current_increment_hash_rejected();
         }
     }
@@ -403,10 +405,24 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 
 void network_listen()
 {
+    uint32_t start_time = millis();
     uint32_t len = 0;
+
+    if (isConnected() == -1)
+    {
+        current_resetSession();
+        return; // Handle connection failure
+    }
 
     do
     {
+        // Check if 5 seconds have elapsed
+        if (millis() - start_time > 5000)
+        {
+            l_debug(TAG_NETWORK, "Timeout occurred. Exiting network_listen loop.");
+            return;
+        }
+
         char data[NETWORK_BUFFER_SIZE];
         len = client.readBytesUntil('\n', data, sizeof(data) - 1);
         l_debug(TAG_NETWORK, "<<< len: %d", len);
@@ -414,11 +430,6 @@ void network_listen()
         if (data[0] != '\0')
         {
             response(data);
-        }
-        if (isConnected() == -1)
-        {
-            current_resetSession();
-            return; // Handle connection failure
         }
 
     } while (len > 0);
