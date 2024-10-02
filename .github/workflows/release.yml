@@ -19,15 +19,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.platformio/.cache
-          key: ${{ runner.os }}-pio-${{ hashFiles('**/*.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pio-
+      # - name: Cache Dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.cache/pip
+      #       ~/.platformio/.cache
+      #     key: ${{ runner.os }}-pio-${{ hashFiles('**/*.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pio-
 
       - name: Set Up Python
         uses: actions/setup-python@v3
