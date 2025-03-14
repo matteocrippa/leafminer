@@ -396,10 +396,11 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     char payload[MAX_PAYLOAD_SIZE];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
 #if defined(ESP8266)
-    request(payload);
+    
     network_listen();
 #else
-    enqueue(payload);
+    request(payload);
+    //enqueue(payload);
 #endif
 }
 
