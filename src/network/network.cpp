@@ -28,9 +28,8 @@ uint8_t isRequestingJob = 0;
 uint32_t authorizeId = 0;
 uint8_t isAuthorized = 0;
 extern Configuration configuration;
-//char payloads[MAX_PAYLOADS][MAX_PAYLOAD_SIZE]; // Array of payloads
-//size_t payloads_count = 0;
-QueueHandle_t payloadQueue = xQueueCreate(MAX_PAYLOADS, sizeof(char[MAX_PAYLOAD_SIZE]));;
+char payloads[MAX_PAYLOADS][MAX_PAYLOAD_SIZE]; // Array of payloads
+size_t payloads_count = 0;
 
 /**
  * @brief Generates the next ID for the network.
@@ -380,8 +379,16 @@ short network_getJob()
 
 void enqueue(const char *payload)
 {
-    l_debug(TAG_NETWORK,"queue payload");
-    xQueueSend(payloadQueue, &payload, 0);
+    if (payloads_count < MAX_PAYLOADS)
+    {
+        strncpy(payloads[payloads_count], payload, MAX_PAYLOAD_SIZE - 1);
+        payloads_count++;
+        l_debug(TAG_NETWORK, "Payload queued: %s", payload);
+    }
+    else
+    {
+        l_error(TAG_NETWORK, "Payload queue is full");
+    }
 }
 
 void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
@@ -401,11 +408,11 @@ void network_listen()
     uint32_t start_time = millis();
     uint32_t len = 0;
 
-    /*if (isConnected() == -1)
+    if (isConnected() == -1)
     {
         current_resetSession();
         return; // Handle connection failure
-    }*/
+    }
 
     do
     {
@@ -430,24 +437,35 @@ void network_listen()
 
 void network_submit(const char *payload)
 {
-    /*if (isConnected() == -1)
+    if (isConnected() == -1)
     {
         current_resetSession();
         return; // Handle connection failure
-    }*/
+    }
 
     request(payload);
+
+    // Remove the submitted payload from the array
+    for (size_t i = 0; i < payloads_count; ++i)
+    {
+        if (strcmp(payloads[i], payload) == 0)
+        {
+            // Shift remaining payloads
+            for (size_t j = i; j < payloads_count - 1; ++j)
+            {
+                strcpy(payloads[j], payloads[j + 1]);
+            }
+            payloads_count--;
+            break;
+        }
+    }
 }
 
 void network_submit_all()
 {
-    char payload[MAX_PAYLOAD_SIZE];
-    l_debug(TAG_NETWORK,"payload count:%i",uxQueueMessagesWaiting(payloadQueue));
-    while(uxQueueMessagesWaiting(payloadQueue) != 0)
+    for (size_t i = 0; i < payloads_count; ++i)
     {
-        xQueueReceive(payloadQueue, &payload, portMAX_DELAY);
-        l_debug(TAG_NETWORK,"send payload");
-        network_submit(payload);
+        network_submit(payloads[i]);
     }
 }
 
@@ -455,7 +473,6 @@ void network_submit_all()
 #define NETWORK_TASK_TIMEOUT 100
 void networkTaskFunction(void *pvParameters)
 {
-    client.setTimeout(10*60);
     while (1)
     {
         network_submit_all();
