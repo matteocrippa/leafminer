@@ -6,7 +6,7 @@
 #endif
 #include <climits>
 
-uint8_t Job::pickaxe(uint32_t core, uint8_t *hash, uint32_t &winning_nonce)
+uint8_t Job::pickaxe(uint32_t core, uint8_t *hash, uint32_t winning_nonce)
 {
     nextNonce(core);
     winning_nonce = block.nonce;
@@ -23,7 +23,7 @@ void Job::nextNonce(uint32_t core)
     block.nonce += (core % 2 == 0) ? 1 : 2;
 }
 
-Job::Job(const Notification &notification, const Subscribe &subscribe, double difficulty) : difficulty(difficulty)
+Job::Job(const Notification notification, const Subscribe subscribe, double difficulty) : difficulty(difficulty)
 {
     try
     {
@@ -101,7 +101,7 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
     }
 }
 
-void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash)
+void Job::generateCoinbaseHash(const std::string coinbase, std::string coinbase_hash)
 {
     try
     {
@@ -119,7 +119,7 @@ void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbas
     }
 }
 
-void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root)
+void Job::calculateMerkleRoot(const std::string coinbase_hash, const std::vector<std::string> merkle_branch, std::string merkle_root)
 {
     try
     {

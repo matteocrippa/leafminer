@@ -13,6 +13,7 @@
 #include "storage/storage.h"
 #include "network/autoupdate.h"
 #include "massdeploy.h"
+#include <esp_task_wdt.h>
 
 #if defined(HAS_LCD)
 #include "screen/screen.h"
@@ -82,11 +83,14 @@ void setup()
 
 #if defined(ESP32)
   btStop();
+  esp_task_wdt_init(900, true);
+  // Idle task that would reset WDT never runs, because core 0 gets fully utilized
+  disableCore0WDT();
   xTaskCreatePinnedToCore(currentTaskFunction, "stale", 1024, NULL, 1, NULL, 1);
-  xTaskCreatePinnedToCore(buttonTaskFunction, "button", 1024, NULL, 2, NULL, 1);
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 10, NULL, 1);
+  xTaskCreatePinnedToCore(networkTaskFunction, "button", 6000, NULL, 2, NULL, 1);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)1, 10, NULL, 1);
 #if CORE == 2
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 11, NULL, 1);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)2, 11, NULL, 0);
 #endif
 #elif defined(ESP8266)
   network_listen();

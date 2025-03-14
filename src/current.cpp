@@ -8,6 +8,7 @@ char TAG_CURRENT[] = "Current";
 
 // Global variables
 Job *current_job = nullptr;
+Job *current_job_next = nullptr;
 Subscribe *current_subscribe = nullptr;
 uint16_t current_job_is_valid = 0;
 uint64_t current_job_processed = 0;
