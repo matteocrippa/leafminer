@@ -15,11 +15,6 @@ void miner(uint32_t core)
     double diff_hash = 0;
     uint32_t winning_nonce = 0;
     uint8_t hash[SHA256M_BLOCK_SIZE];
-    if (!current_job_is_valid || !current_job)
-    {
-        vTaskDelay(100);
-        return;
-    }
 
     while (current_job_is_valid && current_job)
     {
@@ -41,15 +36,11 @@ void miner(uint32_t core)
         }
         current_update_hashrate();
     }
-    if(!current_job_is_valid || !current_job)
-    {
-        vTaskDelay(100);
-        return;
-    }
 #if defined(HAS_LCD)
     screen_loop();
 #endif // HAS_LCD
 
+    
     l_info(TAG_MINER, "[%d] > [%s] > 0x%.8x - diff %.12f", core, current_job->job_id.c_str(), winning_nonce, diff_hash);
     network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
 
