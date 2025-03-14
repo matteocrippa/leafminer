@@ -59,6 +59,8 @@ void current_setJob(const Notification &notification)
             }
         }
 
+        current_job_is_valid = 0;
+        vTaskDelay(100);//give time to stop mining
         deleteCurrentJob();
 
         current_job = new Job(notification, *current_subscribe, current_difficulty);

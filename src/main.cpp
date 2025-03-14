@@ -88,9 +88,9 @@ void setup()
   disableCore0WDT();
   xTaskCreatePinnedToCore(currentTaskFunction, "stale", 1024, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(networkTaskFunction, "button", 6000, NULL, 2, NULL, 1);
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)1, 10, NULL, 1);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 10, NULL, 1);
 #if CORE == 2
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)2, 11, NULL, 0);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 11, NULL, 0);
 #endif
 #elif defined(ESP8266)
   network_listen();
