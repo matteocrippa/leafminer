@@ -33,6 +33,6 @@ struct nerdSHA256_context
 
 /* Calculate midstate */
 RAM_ATTR void nerd_mids(nerdSHA256_context *midstate, uint8_t dataIn[NERD_SHA256_BLOCK_SIZE]);
-RAM_ATTR uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_JOB_BLOCK_SIZE], uint8_t doubleHash[NERD_SHA256_BLOCK_SIZE]);
+uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_JOB_BLOCK_SIZE], uint8_t doubleHash[NERD_SHA256_BLOCK_SIZE]);
 
 #endif

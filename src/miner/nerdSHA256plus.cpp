@@ -14,8 +14,11 @@
 *************************************************************************************/
 
 #include "nerdSHA256plus.h"
-
+#ifdef BOARD_HAS_PSRAM
 MEM_ATTR static const uint32_t K[64] = {
+#else
+static const uint32_t K[64] = {
+#endif
     0x428A2F98L, 0x71374491L, 0xB5C0FBCFL, 0xE9B5DBA5L, 0x3956C25BL,
     0x59F111F1L, 0x923F82A4L, 0xAB1C5ED5L, 0xD807AA98L, 0x12835B01L,
     0x243185BEL, 0x550C7DC3L, 0x72BE5D74L, 0x80DEB1FEL, 0x9BDC06A7L,
@@ -28,7 +31,9 @@ MEM_ATTR static const uint32_t K[64] = {
     0xD6990624L, 0xF40E3585L, 0x106AA070L, 0x19A4C116L, 0x1E376C08L,
     0x2748774CL, 0x34B0BCB5L, 0x391C0CB3L, 0x4ED8AA4AL, 0x5B9CCA4FL,
     0x682E6FF3L, 0x748F82EEL, 0x78A5636FL, 0x84C87814L, 0x8CC70208L,
-    0x90BEFFFAL, 0xA4506CEBL, 0xBEF9A3F7L, 0xC67178F2L};
+    0x90BEFFFAL, 0xA4506CEBL, 0xBEF9A3F7L, 0xC67178F2L
+}
+;
 
 inline uint32_t ROTR(uint32_t x, uint32_t n)
 {
@@ -177,7 +182,11 @@ RAM_ATTR void nerd_mids(nerdSHA256_context *midstate, uint8_t dataIn[NERD_SHA256
     midstate->digest[7] = 0x5BE0CD19 + A[7];
 }
 
+#ifdef BOARD_HAS_PSRAM
 RAM_ATTR uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_JOB_BLOCK_SIZE], uint8_t doubleHash[NERD_SHA256_BLOCK_SIZE])
+#else
+uint8_t nerd_sha256d(nerdSHA256_context *midstate, uint8_t dataIn[NERD_JOB_BLOCK_SIZE], uint8_t doubleHash[NERD_SHA256_BLOCK_SIZE])
+#endif
 {
     uint32_t temp1, temp2;
 
