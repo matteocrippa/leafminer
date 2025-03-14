@@ -391,7 +391,7 @@ void enqueue(const char *payload)
     }
 }
 
-void network_send(const std::string job_id, const std::string extranonce2, const std::string ntime, const uint32_t nonce)
+void network_send(const std::string &job_id, const std::string &extranonce2, const std::string &ntime, const uint32_t &nonce)
 {
     char payload[MAX_PAYLOAD_SIZE];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
