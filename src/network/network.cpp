@@ -418,33 +418,6 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 #endif
 }
 
-void network_listen()
-{
-    uint32_t start_time = millis();
-    uint32_t len = 0;
-
-    if (isConnected() == -1)
-    {
-        current_resetSession();
-        return; // Handle connection failure
-    }
-
-    do
-    {
-        
-        char data[NETWORK_BUFFER_SIZE];
-        //len = client.readBytesUntil('\n', data, sizeof(data) - 1);
-        if (len == 0)
-            return;
-        l_debug(TAG_NETWORK, "<<< len: %d", len);
-        data[len] = '\0';
-        if (data[0] != '\0')
-        {
-            response(data);
-        }
-
-    } while (len > 0);
-}
 
 void network_submit(const char *payload)
 {
@@ -479,16 +452,3 @@ void network_submit_all()
         network_submit(payloads[i]);
     }
 }
-
-#if defined(ESP32)
-#define NETWORK_TASK_TIMEOUT 100
-void networkTaskFunction(void *pvParameters)
-{
-    while (1)
-    {
-        // network_submit_all();
-        network_listen();
-        vTaskDelay(500);
-    }
-}
-#endif

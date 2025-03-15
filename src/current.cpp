@@ -272,14 +272,4 @@ void cleanupResources()
     deleteCurrentSubscribe();
 }
 
-#if defined(ESP32)
-#define CURRENT_STALE_TIMEOUT 50000
-void currentTaskFunction(void *pvParameters)
-{
-    while (1)
-    {
-        current_check_stale();
-        vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
-    }
-}
-#endif
+

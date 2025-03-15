@@ -35,9 +35,4 @@ void current_update_hashrate();
 void current_check_stale();
 bool current_hasJob();
 
-// Declaration for ESP32 specific task function
-#if defined(ESP32)
-void currentTaskFunction(void *pvParameters);
-#endif
-
 #endif
