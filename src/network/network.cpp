@@ -11,6 +11,7 @@
 #include "leafminer.h"
 #include "current.h"
 #include "model/configuration.h"
+#include <AsyncTCP.h>
 
 #define NETWORK_BUFFER_SIZE 2048
 #define NETWORK_TIMEOUT 1000 * 60
@@ -18,9 +19,10 @@
 #define NETWORK_WIFI_ATTEMPTS 2
 #define NETWORK_STRATUM_ATTEMPTS 2
 #define MAX_PAYLOAD_SIZE 256
-#define MAX_PAYLOADS 10
+#define MAX_PAYLOADS 1
 
-WiFiClient client = WiFiClient();
+//WiFiClient client = WiFiClient();
+AsyncClient *client = new AsyncClient;
 char TAG_NETWORK[8] = "Network";
 uint64_t id = 0;
 uint64_t requestJobId = 0;
@@ -42,115 +44,6 @@ size_t payloads_count = 0;
 uint64_t nextId()
 {
     return (id == UINT64_MAX) ? 1 : ++id;
-}
-
-/**
- * Checks if the device is connected to the network.
- *
- * @note This function requires the configuration to be set.
- */
-short isConnected()
-{
-    if (WiFi.status() == WL_CONNECTED && client.connected())
-    {
-        return 1;
-    }
-
-    uint16_t wifi_attemps = 0;
-
-    // check if we are already connected to WiFi
-    while (wifi_attemps < NETWORK_WIFI_ATTEMPTS)
-    {
-        l_info(TAG_NETWORK, "Connecting to %s...", configuration.wifi_ssid.c_str());
-        WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
-        wifi_attemps++;
-        delay(500);
-        if (WiFi.waitForConnectResult() == WL_CONNECTED)
-        {
-            break;
-        }
-        delay(1500);
-    }
-
-    if (WiFi.waitForConnectResult() != WL_CONNECTED)
-    {
-        l_error(TAG_NETWORK, "Unable to connect to WiFi");
-        return -1;
-    }
-
-    l_info(TAG_NETWORK, "Connected to WiFi");
-    l_info(TAG_NETWORK, "IP address: %s", WiFi.localIP().toString().c_str());
-    l_info(TAG_NETWORK, "MAC address: %s", WiFi.macAddress().c_str());
-
-    uint16_t wifi_stratum = 0;
-
-    // and we are connected to the host
-    while (wifi_stratum < NETWORK_STRATUM_ATTEMPTS)
-    {
-        l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
-        client.connect(configuration.pool_url.c_str(), configuration.pool_port);
-        delay(500);
-        if (client.connected())
-        {
-            break;
-        }
-        wifi_stratum++;
-        delay(1000);
-    }
-
-    if (!client.connected())
-    {
-        l_error(TAG_NETWORK, "Unable to connect to host");
-        return -1;
-    }
-
-    return 1;
-}
-
-/**
- * Sends a request to the server with the specified payload.
- *
- * @param payload The payload to send to the server.
- */
-void request(const char *payload)
-{
-    client.print(payload);
-    l_info(TAG_NETWORK, ">>> %s", payload);
-}
-
-/**
- * Authorizes the network connection by sending a request with the appropriate payload.
- */
-void authorize()
-{
-    char payload[1024];
-    uint64_t next_id = nextId();
-    isAuthorized = 0;
-    authorizeId = next_id;
-    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.authorize\",\"params\":[\"%s\",\"%s\"]}\n", next_id, configuration.wallet_address.c_str(), configuration.pool_password.c_str());
-    request(payload);
-}
-
-/**
- * Subscribes to the mining service.
- * Generates a payload with the subscription details and sends it as a request.
- */
-void subscribe()
-{
-    char payload[1024];
-    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.subscribe\",\"params\":[\"LeafMiner/%s\", null]}\n", nextId(), _VERSION);
-    request(payload);
-}
-
-/**
- * Suggests the mining difficulty for the network.
- * This function generates a payload string with the necessary data and sends it as a request.
- */
-void difficulty()
-{
-    char payload[1024];
-    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.suggest_difficulty\",\"params\":[%f]}\n", nextId(), DIFFICULTY);
-    request(payload);
 }
 
 /**
@@ -221,11 +114,12 @@ const char *responseType(cJSON *json)
  * The response type determines how the response data is processed and stored.
  *
  */
-void response(std::string r)
+
+static void response(char * r)
 {
-    cJSON *json = cJSON_Parse(r.c_str());
+    cJSON *json = cJSON_Parse(r);
     const char *type = responseType(json);
-    l_info(TAG_NETWORK, "<<< [%s] %s", type, r.c_str());
+    l_info(TAG_NETWORK, "<<< [%s] %s", type, r);
 
     if (strcmp(type, "subscribe") == 0)
     {
@@ -342,8 +236,126 @@ void response(std::string r)
         l_error(TAG_NETWORK, "Unknown response type: %s", type);
     }
     cJSON_Delete(json);
-    r.clear();
+    //r.clear();
 }
+
+/**
+ * Checks if the device is connected to the network.
+ *
+ * @note This function requires the configuration to be set.
+ */
+short isConnected()
+{
+    if (WiFi.status() == WL_CONNECTED && client->connected())
+    {
+        return 1;
+    }
+
+    uint16_t wifi_attemps = 0;
+
+    // check if we are already connected to WiFi
+    while (wifi_attemps < NETWORK_WIFI_ATTEMPTS)
+    {
+        l_info(TAG_NETWORK, "Connecting to %s...", configuration.wifi_ssid.c_str());
+        WiFi.begin(configuration.wifi_ssid.c_str(), configuration.wifi_password.c_str());
+        wifi_attemps++;
+        delay(500);
+        if (WiFi.waitForConnectResult() == WL_CONNECTED)
+        {
+            break;
+        }
+        delay(1500);
+    }
+
+    if (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
+        l_error(TAG_NETWORK, "Unable to connect to WiFi");
+        return -1;
+    }
+
+    l_info(TAG_NETWORK, "Connected to WiFi");
+    l_info(TAG_NETWORK, "IP address: %s", WiFi.localIP().toString().c_str());
+    l_info(TAG_NETWORK, "MAC address: %s", WiFi.macAddress().c_str());
+
+    uint16_t wifi_stratum = 0;
+
+    // and we are connected to the host
+    while (wifi_stratum < NETWORK_STRATUM_ATTEMPTS)
+    {
+        l_debug(TAG_NETWORK, "Connecting to host %s...", configuration.pool_url.c_str());
+        client->onData([](void *arg, AsyncClient *client, void *data, size_t len) {
+            char * da;
+            da = (char*)data;
+            
+            response(da);
+          });
+        client->connect(configuration.pool_url.c_str(), configuration.pool_port);
+        delay(500);
+        if (client->connected())
+        {
+            break;
+        }
+        wifi_stratum++;
+        delay(1000);
+    }
+
+    if (!client->connected())
+    {
+        l_error(TAG_NETWORK, "Unable to connect to host");
+        return -1;
+    }
+
+    return 1;
+}
+
+/**
+ * Sends a request to the server with the specified payload.
+ *
+ * @param payload The payload to send to the server.
+ */
+void request(const char *payload)
+{
+    client->write(payload);
+    l_info(TAG_NETWORK, ">>> %s", payload);
+}
+
+/**
+ * Authorizes the network connection by sending a request with the appropriate payload.
+ */
+void authorize()
+{
+    char payload[1024];
+    uint64_t next_id = nextId();
+    isAuthorized = 0;
+    authorizeId = next_id;
+    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.authorize\",\"params\":[\"%s\",\"%s\"]}\n", next_id, configuration.wallet_address.c_str(), configuration.pool_password.c_str());
+    request(payload);
+}
+
+/**
+ * Subscribes to the mining service.
+ * Generates a payload with the subscription details and sends it as a request.
+ */
+void subscribe()
+{
+    char payload[1024];
+    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.subscribe\",\"params\":[\"LeafMiner/%s\", null]}\n", nextId(), _VERSION);
+    request(payload);
+}
+
+/**
+ * Suggests the mining difficulty for the network.
+ * This function generates a payload string with the necessary data and sends it as a request.
+ */
+void difficulty()
+{
+    char payload[1024];
+    sprintf(payload, "{\"id\":%llu,\"method\":\"mining.suggest_difficulty\",\"params\":[%f]}\n", nextId(), DIFFICULTY);
+    request(payload);
+}
+
+
+
 
 short network_getJob()
 {
@@ -396,11 +408,13 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
     char payload[MAX_PAYLOAD_SIZE];
     snprintf(payload, sizeof(payload), "{\"id\":%llu,\"method\":\"mining.submit\",\"params\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%08x\"]}\n", nextId(), configuration.wallet_address.c_str(), job_id.c_str(), extranonce2.c_str(), ntime.c_str(), nonce);
 #if defined(ESP8266)
-    
+    request(payload);
     network_listen();
 #else
     request(payload);
-    //enqueue(payload);
+    //vTaskDelay(50);
+    //network_listen();
+    // enqueue(payload);
 #endif
 }
 
@@ -417,15 +431,11 @@ void network_listen()
 
     do
     {
-        // Check if 5 seconds have elapsed
-        if (millis() - start_time > 5000)
-        {
-            l_debug(TAG_NETWORK, "Timeout occurred. Exiting network_listen loop.");
-            return;
-        }
-
+        
         char data[NETWORK_BUFFER_SIZE];
-        len = client.readBytesUntil('\n', data, sizeof(data) - 1);
+        //len = client.readBytesUntil('\n', data, sizeof(data) - 1);
+        if (len == 0)
+            return;
         l_debug(TAG_NETWORK, "<<< len: %d", len);
         data[len] = '\0';
         if (data[0] != '\0')
@@ -476,9 +486,9 @@ void networkTaskFunction(void *pvParameters)
 {
     while (1)
     {
-        network_submit_all();
+        // network_submit_all();
         network_listen();
-        vTaskDelay(NETWORK_TASK_TIMEOUT / portTICK_PERIOD_MS);
+        vTaskDelay(500);
     }
 }
 #endif

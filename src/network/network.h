@@ -7,4 +7,5 @@ void network_send(const std::string &job_id, const std::string &extranonce2, con
 void network_listen();
 void networkTaskFunction(void *pvParameters);
 void network_submit_all();
+void difficulty();
 #endif // NETWORK_H

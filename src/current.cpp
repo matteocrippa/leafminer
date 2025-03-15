@@ -229,7 +229,8 @@ void current_update_hashrate()
         if (millis() - current_hashes_time > 1000)
         {
             current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
-            l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+
+            l_debug(TAG_CURRENT, "H: %.2fkH/s A:%i R:%i PD:%.4f HD:%.5f", current_hashrate, current_get_hash_accepted(), current_get_hash_rejected(), current_getDifficulty(), current_getHighestDifficulty());
 #if defined(HAS_LCD)
             screen_loop();
 #endif
@@ -247,7 +248,7 @@ void current_check_stale()
 {
     try
     {
-        if (millis() - current_last_hash > 200000)
+        if (millis() - current_last_hash > 600000)
         {
             l_error(TAG_CURRENT, "No hash received in the last 3 minutes. Restarting...");
             ESP.restart();

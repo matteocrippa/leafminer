@@ -26,6 +26,7 @@ void setup()
 {
   Serial.begin(115200);
   delay(1500);
+  vTaskPrioritySet(NULL, 1);
   l_info(TAG_MAIN, "LeafMiner - v.%s - (C: %d)", _VERSION, CORE);
   l_info(TAG_MAIN, "Compiled: %s %s", __DATE__, __TIME__);
   l_info(TAG_MAIN, "Free memory: %d", ESP.getFreeHeap());
@@ -87,10 +88,10 @@ void setup()
   // Idle task that would reset WDT never runs, because core 0 gets fully utilized
   disableCore0WDT();
   //xTaskCreatePinnedToCore(currentTaskFunction, "stale", 1024, NULL, 2, NULL, 1);
-  // xTaskCreate(networkTaskFunction, "network", 6000, NULL, 9, NULL);
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 10, NULL, 1);
+  //xTaskCreate(networkTaskFunction, "network", 6000, NULL, 2, NULL);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 2, NULL, 1);
 #if CORE == 2
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 10, NULL, 0);
+  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 2, NULL, 0);
 #endif
 #elif defined(ESP8266)
   network_listen();
@@ -109,9 +110,11 @@ void loop()
   miner(0);
 #endif // ESP8266
 #if defined(ESP32)
-  network_submit_all();
-  network_listen();
-  current_check_stale();
+  //network_submit_all();
+  //network_listen();
+  //if(current_getDifficulty()> DIFFICULTY)
+  //      difficulty();
+  vTaskDelay(1000);
 #endif
 }
 

@@ -45,7 +45,8 @@ void miner(uint32_t core)
     network_send(current_job->job_id, current_job->extranonce2, current_job->ntime, winning_nonce);
 
     current_setHighestDifficulty(diff_hash);
-
+    if(!current_job)
+        return;
     if (littleEndianCompare(hash, current_job->target.value, 32) < 0)
     {
         l_info(TAG_MINER, "[%d] > Found block - 0x%.8x", core, current_job->block.nonce);
@@ -61,7 +62,7 @@ void mineTaskFunction(void *pvParameters)
     {
         if (current_job_is_valid && current_job)
             miner(core);
-        vTaskDelay(33 / portTICK_PERIOD_MS); // Add a small delay to prevent tight loop
+        vTaskDelay(100); // Add a small delay to prevent tight loop
     }
 }
 #endif
