@@ -8,6 +8,7 @@ char TAG_CURRENT[] = "Current";
 
 // Global variables
 Job *current_job = nullptr;
+Job *current_job_next = nullptr;
 Subscribe *current_subscribe = nullptr;
 uint16_t current_job_is_valid = 0;
 uint64_t current_job_processed = 0;
@@ -58,6 +59,8 @@ void current_setJob(const Notification &notification)
             }
         }
 
+        current_job_is_valid = 0;
+        vTaskDelay(100);//give time to stop mining
         deleteCurrentJob();
 
         current_job = new Job(notification, *current_subscribe, current_difficulty);
@@ -226,7 +229,8 @@ void current_update_hashrate()
         if (millis() - current_hashes_time > 1000)
         {
             current_hashrate = (current_hashes / ((millis() - current_hashes_time) / 1000.0)) / 1000.0; // KH/s
-            l_debug(TAG_CURRENT, "Hashrate: %.2f kH/s", current_hashrate);
+
+            l_debug(TAG_CURRENT, "H: %.2fkH/s A:%i R:%i PD:%.4f HD:%.5f", current_hashrate, current_get_hash_accepted(), current_get_hash_rejected(), current_getDifficulty(), current_getHighestDifficulty());
 #if defined(HAS_LCD)
             screen_loop();
 #endif
@@ -244,7 +248,7 @@ void current_check_stale()
 {
     try
     {
-        if (millis() - current_last_hash > 200000)
+        if (millis() - current_last_hash > 600000)
         {
             l_error(TAG_CURRENT, "No hash received in the last 3 minutes. Restarting...");
             ESP.restart();
@@ -268,14 +272,4 @@ void cleanupResources()
     deleteCurrentSubscribe();
 }
 
-#if defined(ESP32)
-#define CURRENT_STALE_TIMEOUT 50000
-void currentTaskFunction(void *pvParameters)
-{
-    while (1)
-    {
-        current_check_stale();
-        vTaskDelay(CURRENT_STALE_TIMEOUT / portTICK_PERIOD_MS);
-    }
-}
-#endif
+
