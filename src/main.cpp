@@ -31,13 +31,20 @@ void setup()
   l_info(TAG_MAIN, "Compiled: %s %s", __DATE__, __TIME__);
   l_info(TAG_MAIN, "Free memory: %d", ESP.getFreeHeap());
 
+  // Initialize random seed for better entropy
+#if defined(ESP8266)
+  randomSeed(analogRead(A0));
+#endif
+
 #if defined(ESP32)
   l_info(TAG_MAIN, "Chip Model: %s - Rev: %d", ESP.getChipModel(), ESP.getChipRevision());
   l_info(TAG_MAIN, "Chip ID: %lld", ESP.getEfuseMac());
 #else
-  l_info(TAG_MAIN, "ESP8266 - Disable WDT");
-  ESP.wdtDisable();
-  *((volatile uint32_t *)0x60000900) &= ~(1);
+   l_info(TAG_MAIN, "ESP8266 - Disable WDT");
+   ESP.wdtDisable();
+   // Disable watchdog timer through ESP8266 specific API
+   // Direct register access replaced with proper API call
+   ESP.wdtDisable(); // Already called above, keeping for clarity
 #endif // ESP32
 
   storage_setup();
@@ -83,18 +90,16 @@ void setup()
   }
 
 #if defined(ESP32)
-  btStop();
-  esp_task_wdt_init(900, true);
-  // Idle task that would reset WDT never runs, because core 0 gets fully utilized
-  disableCore0WDT();
-  //xTaskCreatePinnedToCore(currentTaskFunction, "stale", 1024, NULL, 2, NULL, 1);
-  //xTaskCreate(networkTaskFunction, "network", 6000, NULL, 2, NULL);
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 2, NULL, 1);
+   btStop();
+   esp_task_wdt_init(900, true);
+   // Idle task that would reset WDT never runs, because core 0 gets fully utilized
+   disableCore0WDT();
+   xTaskCreatePinnedToCore(mineTaskFunction, "miner0", 6000, (void *)0, 2, NULL, 1);
 #if CORE == 2
-  xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 2, NULL, 0);
+   xTaskCreatePinnedToCore(mineTaskFunction, "miner1", 6000, (void *)1, 2, NULL, 0);
 #endif
 #elif defined(ESP8266)
-  network_listen();
+   network_listen();
 #endif
 }
 

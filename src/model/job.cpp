@@ -5,22 +5,12 @@
 #include "esp_random.h"
 #endif
 #include <climits>
-
-uint8_t Job::pickaxe(uint32_t core, uint8_t *hash, uint32_t &winning_nonce)
-{
-    nextNonce(core);
-    winning_nonce = block.nonce;
-    return nerd_sha256d(&sha, reinterpret_cast<unsigned char *>(&block) + 64, hash);
-}
+#include <string>
+#include <cstring>
 
 void Job::setStartNonce(uint32_t start_nonce)
 {
     block.nonce = start_nonce;
-}
-
-void Job::nextNonce(uint32_t core)
-{
-    block.nonce += (core % 2 == 0) ? 1 : 2;
 }
 
 Job::Job(const Notification &notification, const Subscribe &subscribe, double difficulty) : difficulty(difficulty)
@@ -78,12 +68,12 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
     try
     {
         // Generate a random number between 0 and INT_MAX
-#if defined(ESP8266)
-        randomSeed(analogRead(A0));
+    #if defined(ESP8266)
+        // Seed only once - moved to initialization
         uint32_t randomValue = random();
-#else
+    #else
         uint32_t randomValue = esp_random();
-#endif
+    #endif
         l_info(TAG_JOB, "Random value: %u", randomValue);
 
         // Convert the random number to a hex string
@@ -101,45 +91,70 @@ std::string Job::generate_extra_nonce2(int extranonce2_size)
     }
 }
 
-void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash)
-{
-    try
+    void Job::generateCoinbaseHash(const std::string &coinbase, std::string &coinbase_hash)
     {
-        const size_t len = coinbase.length();
-        uint8_t coinbaseBytes[len / 2];
-        hexStringToByteArray(coinbase.c_str(), coinbaseBytes);
-        uint8_t hash[SHA256M_BLOCK_SIZE];
-        sha256_double(coinbaseBytes, len / 2, hash);
-        coinbase_hash = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
-        l_debug(TAG_JOB, "Coinbase hash: %s", coinbase_hash.c_str());
-    }
-    catch (...)
-    {
-        l_error(TAG_JOB, "Exception occurred.");
-    }
-}
-
-void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root)
-{
-    try
-    {
-        uint8_t hash[SHA256M_BLOCK_SIZE] = {};
-        hexStringToByteArray(coinbase_hash.c_str(), hash);
-
-        for (const auto &branch : merkle_branch)
+        try
         {
-            uint8_t merkle_branch_bin[32];
-            hexStringToByteArray(branch.c_str(), merkle_branch_bin);
+            const size_t len = coinbase.length();
+            // Fixed size buffer with bounds checking
+            if (len % 2 != 0 || len / 2 > SHA256M_BLOCK_SIZE * 2) {
+                l_error(TAG_JOB, "Invalid coinbase length: %zu", len);
+                return;
+            }
+            uint8_t coinbaseBytes[SHA256M_BLOCK_SIZE * 2]; // Max size needed
+            hexStringToByteArray(coinbase.c_str(), coinbaseBytes);
+            uint8_t hash[SHA256M_BLOCK_SIZE];
+            sha256_double(coinbaseBytes, len / 2, hash);
+            coinbase_hash = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
+            l_debug(TAG_JOB, "Coinbase hash: %s", coinbase_hash.c_str());
+        }
+        catch (...)
+        {
+            l_error(TAG_JOB, "Exception occurred.");
+        }
+    }
 
-            uint8_t merkle_concatenated[SHA256M_BLOCK_SIZE * 2];
-            for (size_t j = 0; j < 32; j++)
+    void Job::calculateMerkleRoot(const std::string &coinbase_hash, const std::vector<std::string> &merkle_branch, std::string &merkle_root)
+    {
+        try
+        {
+            uint8_t hash[SHA256M_BLOCK_SIZE] = {};
+            hexStringToByteArray(coinbase_hash.c_str(), hash);
+
+            for (const auto &branch : merkle_branch)
             {
-                merkle_concatenated[j] = hash[j];
-                merkle_concatenated[32 + j] = merkle_branch_bin[j];
+                // Fixed size buffers with bounds checking
+                if (branch.length() != 64) { // 32 bytes in hex = 64 chars
+                    l_error(TAG_JOB, "Invalid merkle branch length: %zu", branch.length());
+                    return;
+                }
+                
+                uint8_t merkle_branch_bin[32];
+                hexStringToByteArray(branch.c_str(), merkle_branch_bin);
+
+                uint8_t merkle_concatenated[SHA256M_BUFFER_SIZE * 2];
+                for (size_t j = 0; j < 32; j++)
+                {
+                    merkle_concatenated[j] = hash[j];
+                    merkle_concatenated[32 + j] = merkle_branch_bin[j];
+                }
+
+                sha256_double(merkle_concatenated, sizeof(merkle_concatenated), hash);
             }
 
-            sha256_double(merkle_concatenated, sizeof(merkle_concatenated), hash);
+            merkle_root = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
+            l_debug(TAG_JOB, "Merkle root: %s", merkle_root.c_str());
         }
+        catch (...)
+        {
+            l_error(TAG_JOB, "Exception occurred.");
+            }
+        }
+        catch (...)
+        {
+            l_error(TAG_JOB, "Exception occurred.");
+        }
+    }
 
         merkle_root = byteArrayToHexString(hash, SHA256M_BLOCK_SIZE);
         l_debug(TAG_JOB, "Merkle root: %s", merkle_root.c_str());

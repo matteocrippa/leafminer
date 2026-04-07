@@ -15,18 +15,36 @@ void miner(uint32_t core)
     double diff_hash = 0;
     uint32_t winning_nonce = 0;
     uint8_t hash[SHA256M_BLOCK_SIZE];
+    uint32_t local_hashes = 0;
+    const uint32_t nonce_step = (core % 2 == 0) ? 1 : 2;
+    uint32_t wdt_counter = 0; // Counter for WDT feeding
 
     while (current_job_is_valid && current_job)
     {
 #if defined(ESP8266)
-        ESP.wdtFeed();
+        // Feed WDT less frequently to reduce overhead (every 256 hashes)
+        if (++wdt_counter >= 256) {
+            ESP.wdtFeed();
+            wdt_counter = 0;
+        }
 #endif
 
-        current_increment_hashes();
-        if (!current_job->pickaxe(core, hash, winning_nonce))
+        local_hashes++;
+        if (!current_job->pickaxe(nonce_step, hash, winning_nonce))
         {
+            // Flush hash count and check hashrate every 256 nonces
+            if ((local_hashes & 0xFF) == 0)
+            {
+                current_batch_hashes(local_hashes);
+                local_hashes = 0;
+                current_update_hashrate();
+            }
             continue;
         }
+
+        // Flush remaining hashes before evaluating difficulty
+        current_batch_hashes(local_hashes);
+        local_hashes = 0;
 
         diff_hash = diff_from_target(hash);
         if (diff_hash > current_getDifficulty())
@@ -35,6 +53,11 @@ void miner(uint32_t core)
             break;
         }
         current_update_hashrate();
+    }
+    // Flush any remaining hashes
+    if (local_hashes > 0)
+    {
+        current_batch_hashes(local_hashes);
     }
 #if defined(HAS_LCD)
     screen_loop();

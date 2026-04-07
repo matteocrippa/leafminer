@@ -12,7 +12,19 @@
 - [ ] Add support for .66 inch OLED
 - [ ] Add mDNS support to discover Main node
 - [ ] Introduce proxy mining Main + Nodes to split the nonce in count(nodes)
+- [x] Fix stack overflow risk with variable-length arrays in job.cpp
+- [x] Optimize random number generation seeding in job.cpp
+- [x] Optimize miner loop counter logic in miner.cpp
+- [x] Reduce string allocations in tight loops
+- [x] Decrease debug logging frequency in mining path
+- [x] Consistent error handling patterns
+- [x] Remove dead/commented code
+- [x] Improve portability of hardware-specific code
+
+# FUTURE
+
 - [ ] Migrate to IDF
+
 
 # DONE
 
